@@ -70,6 +70,10 @@ public:
     compute_dDdP_FD(Capsule);
     compute_d2DdP2_FD(Capsule);
 
+    // Helpers
+    Vector3d getPosition() const { return m_position; }
+    double getRadius() const { return m_radius; }
+
 private:
     Vector3d m_position;
     double m_radius;
@@ -95,6 +99,10 @@ public:
     compute_d2DdP2_FD(Sphere);
     compute_d2DdP2_FD(Capsule);
 
+    // Helpers
+    Vector3d getStartPosition() const { return m_startPosition; }
+    Vector3d getEndPosition() const { return m_endPosition; }
+    double getRadius() const { return m_radius; }
 private:
     Vector3d m_startPosition;
     Vector3d m_endPosition;
