@@ -17,5 +17,8 @@ target_include_directories(
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
 
-# TODO: add option for building examples
-add_subdirectory(examples)
+option(BUILD_EXAMPLES "Build examples" ON)
+
+if(${BUILD_EXAMPLES})
+  add_subdirectory(examples)
+endif(${BUILD_EXAMPLES})
