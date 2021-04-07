@@ -19,7 +19,7 @@ project("DCA" VERSION 0.1
 find_package(Eigen3 REQUIRED NO_MODULE)
 set(CMAKE_CXX_STANDARD 20)
 
-cmake_policy(SET CMP0077 OLD) # let us overwrite options in subprojects
+cmake_policy(SET CMP0077 NEW) # let us overwrite options in subprojects
 
 option(BUILD_EXAMPLES "Build examples" ON)
 option(USE_COMPACT_N_SEARCH "Build a Pair generator with the help of CompactNSearch" ON)
