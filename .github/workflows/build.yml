@@ -6,5 +6,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2.0.0
+    - name: Load Dependencies
+      run: sudo apt-get install libeigen3-dev
     - name: Build project
       uses: nicledomaS/cmake_build_action@v1.3
