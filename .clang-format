@@ -1,0 +1,7 @@
+# Use the Google style in this project.
+BasedOnStyle: Google
+UseTab: Never
+IndentWidth: 4
+ColumnLimit: 80
+AccessModifierOffset: -4
+ReflowComments: false
