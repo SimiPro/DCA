@@ -19,8 +19,6 @@ project("DCA" VERSION 0.1
 find_package(Eigen3 REQUIRED NO_MODULE)
 set(CMAKE_CXX_STANDARD 20)
 
-cmake_policy(SET CMP0077 NEW) # let us overwrite options in subprojects
-
 option(BUILD_EXAMPLES "Build examples" ON)
 option(USE_COMPACT_N_SEARCH "Build a Pair generator with the help of CompactNSearch" ON)
 
@@ -43,7 +41,7 @@ if(${USE_COMPACT_N_SEARCH})
     GIT_REPOSITORY https://github.com/digitalillusions/CompactNSearch.git #
     GIT_TAG 011eb171c2cbfa536cd47b6a6ffdf90c9b0d40fd #
   )
-  set(USE_DOUBLE_PRECISION ON) # Tell CompactNSearch to use doubles instead of floats
+  set(USE_DOUBLE_PRECISION ON CACHE INTERNAL "") # Tell CompactNSearch to use doubles instead of floats
   fetch(compactnsearch)
   add_subdirectory(${compactnsearch_SOURCE_DIR} CompactNSearch)
   
