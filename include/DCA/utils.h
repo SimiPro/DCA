@@ -39,6 +39,11 @@ using Eigen::VectorXd;
 // Easier access to a pair (corresponding of two indices)
 using pair_t = std::pair<size_t, size_t>;
 
+// Helper for std::visit
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+
+
 #define EPSILON 1e-8
 
 /**
