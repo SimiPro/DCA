@@ -53,6 +53,7 @@ if(${USE_COMPACT_N_SEARCH})
     GIT_REPOSITORY https://github.com/digitalillusions/CompactNSearch.git #
     GIT_TAG 011eb171c2cbfa536cd47b6a6ffdf90c9b0d40fd #
   )
+  set(BUILD_DEMO OFF CACHE INTERNAL "") # Tell CompactNSearch to not build their demo
   set(USE_DOUBLE_PRECISION ON CACHE INTERNAL "") # Tell CompactNSearch to use doubles instead of floats
   fetch(compactnsearch)
   add_subdirectory(${compactnsearch_SOURCE_DIR} CompactNSearch)

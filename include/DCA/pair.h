@@ -17,6 +17,7 @@
 #if BUILD_COMPACT_N_SEARCH
 
 #include <CompactNSearch>
+#include <array>
 #include <exception>
 
 #endif /* BUILD_COMPACT_N_SEARCH */
