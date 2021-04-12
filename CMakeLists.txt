@@ -16,7 +16,6 @@ project("DCA" VERSION 0.1
              DESCRIPTION "Differentiable Collision Avoidance"
              HOMEPAGE_URL "https://github.com/SimiPro/DCA")
 
-find_package(Eigen3 REQUIRED NO_MODULE)
 set(CMAKE_CXX_STANDARD 20)
 
 option(BUILD_EXAMPLES "Build examples" ON)
@@ -29,6 +28,18 @@ target_include_directories(
   INTERFACE $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
+# Now download eigen3
+# download as zip, so it's a bit smaller than downloading the whole repo
+FetchContent_Declare(
+    eigen #
+    URL https://gitlab.com/libeigen/eigen/-/archive/3.3.7/eigen-3.3.7.zip #
+    URL_HASH MD5=888aab45512cc0c734b3e8f60280daba #
+)
+fetch(eigen)
+add_library(eigen INTERFACE)
+add_library (Eigen3::Eigen ALIAS eigen)
+target_include_directories(eigen INTERFACE ${eigen_SOURCE_DIR})
+
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
 
@@ -36,6 +47,7 @@ if(${USE_COMPACT_N_SEARCH})
 
   target_compile_definitions(${PROJECT_NAME} INTERFACE -DBUILD_COMPACT_N_SEARCH=1)
   
+  # Now download CompactNSearch (from a fork)
   FetchContent_Declare(
     compactnsearch #
     GIT_REPOSITORY https://github.com/digitalillusions/CompactNSearch.git #
