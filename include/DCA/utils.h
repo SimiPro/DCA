@@ -9,7 +9,8 @@
 #ifndef __DCA_UTILS_H__
 #define __DCA_UTILS_H__
 
-#include <eigen3/Eigen/Core>
+#include <Eigen/Core>
+#include <Eigen/Sparse>
 #include <variant>
 #include <vector>
 
@@ -35,6 +36,8 @@ using Eigen::MatrixXd;
 
 // Easier access to any dynamic vector
 using Eigen::VectorXd;
+
+using SparseMatrixd = Eigen::SparseMatrix<double>;
 
 // Easier access to a pair (corresponding of two indices)
 using pair_t = std::pair<size_t, size_t>;
