@@ -99,7 +99,11 @@ public:
      * @param[out] dDdP The gradient of the distance function.
      * @param[in] other The other primitive to check against.
      */
-    virtual void compute_dDdP(VectorXd &dDdP, const T &other) const = 0;
+    virtual void compute_dDdP(VectorXd &dDdP, const T &other) const {
+        /**
+         * @todo
+         */
+    }
 
     /**
      * Compute the second derivative (hessian)
@@ -109,7 +113,11 @@ public:
      * @param[out] d2DdP2 The hessian of the distance function.
      * @param[in] other The other primitive to check against.
      */
-    virtual void compute_d2DdP2(MatrixXd &d2DdP2, const T &other) const = 0;
+    virtual void compute_d2DdP2(MatrixXd &d2DdP2, const T &other) const {
+        /**
+         * @todo
+         */
+    }
 };
 
 /**
