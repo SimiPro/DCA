@@ -3,7 +3,7 @@
  * This means, it performs various approaches
  * for a broad collision detection.
  * 
- * @author: Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
+ * @author Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
  * CRL Group, ETH Zurich, crl.ethz.ch
  * (c) 2021
  */

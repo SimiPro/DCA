@@ -2,7 +2,7 @@
  * This file serves as a helper such that a user
  * has only to include a single file to use this library.
  * 
- * @author: Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
+ * @author Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
  * CRL Group, ETH Zurich, crl.ethz.ch
  * (c) 2021
  */

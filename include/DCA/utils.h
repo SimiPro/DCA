@@ -1,7 +1,7 @@
 /**
  * This file holds utils used all over this library.
  * 
- * @author: Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
+ * @author Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
  * CRL Group, ETH Zurich, crl.ethz.ch
  * (c) 2021
  */
@@ -37,15 +37,22 @@ using Eigen::MatrixXd;
 // Easier access to any dynamic vector
 using Eigen::VectorXd;
 
+// Easier access to a sparse matrix
 using SparseMatrixd = Eigen::SparseMatrix<double>;
 
 // Easier access to a pair (corresponding of two indices)
 using pair_t = std::pair<size_t, size_t>;
 
-// Helper for std::visit
-template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
+// Helper for std::visit
+template <class... Ts>
+struct overloaded : Ts... {
+    using Ts::operator()...;
+};
+template <class... Ts>
+overloaded(Ts...) -> overloaded<Ts...>;
+#endif
 
 #define EPSILON 1e-8
 
@@ -79,6 +86,7 @@ template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
  * being the type of the other primitive.
  * 
  * The same applies to the hessian.
+ * @param T One of Sphere or Capsule
  */
 template <typename T>
 class CollisionWith {
@@ -86,6 +94,7 @@ public:
     /**
      * Compute the distance to another object.
      * This function must be implemented by any primitive.
+     * @param other The other primitive to check against.
      */
     virtual double compute_D(const T &other) const = 0;
 
