@@ -17,7 +17,7 @@
 #if BUILD_COMPACT_N_SEARCH
 
 #include <CompactNSearch>
-#include <array>
+#include <array>  // for windows
 #include <exception>
 
 #endif /* BUILD_COMPACT_N_SEARCH */
@@ -32,6 +32,8 @@ public:
      * This function generates the pairs given the primitives.
      * The returned vector consists of pairs, where each pair holds two numbers:
      * The indices of the corresponding primitives which were given.
+     * @param primitives All primitives to generate the pairs from.
+     * @return A vector of pairs of indices, where each index corresponds to a primitive in the primitives vector.
      */
     virtual std::vector<pair_t> generate(
         const std::vector<primitive_t> &primitives) const = 0;
@@ -43,6 +45,9 @@ public:
  */
 class PermutationPairGenerator : public PairGenerator {
 public:
+    /**
+     * @copydoc PairGenerator::generate
+     */
     virtual std::vector<pair_t> generate(
         const std::vector<primitive_t> &primitives) const override {
         // Create all possible permutations.
@@ -62,10 +67,23 @@ public:
 };
 
 #if BUILD_COMPACT_N_SEARCH
+/**
+ * This generator uses the CompactNSearch library 
+ * for efficient neighbor searching.
+ * Altough the neighborhood is computed new for each call to generate,
+ * it serves as a first usefull implementation
+ */
 class NeighborsPairGenerator : public PairGenerator {
 public:
+    /**
+     * Construct this generator with a given radius
+     * @param radius The radius to search other primitives in.
+     */
     NeighborsPairGenerator(const double &radius) : m_radius(radius) {}
 
+    /**
+     * @copydoc PairGenerator::generate
+     */
     virtual std::vector<pair_t> generate(
         const std::vector<primitive_t> &primitives) const override {
         std::vector<pair_t> ret;
