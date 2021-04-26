@@ -22,6 +22,7 @@ option(DCA_BUILD_EXAMPLES "Build examples" ON)
 option(DCA_USE_COMPACT_N_SEARCH "Build a Pair generator with the help of CompactNSearch" ON)
 
 add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 target_include_directories(
   ${PROJECT_NAME}
@@ -47,7 +48,6 @@ target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
 
 if(${DCA_USE_COMPACT_N_SEARCH})
-
   target_compile_definitions(${PROJECT_NAME} INTERFACE -DBUILD_COMPACT_N_SEARCH=1)
   
   # Now download CompactNSearch (from a fork)
@@ -60,17 +60,11 @@ if(${DCA_USE_COMPACT_N_SEARCH})
   set(USE_DOUBLE_PRECISION ON CACHE INTERNAL "") # Tell CompactNSearch to use doubles instead of floats
   fetch(compactnsearch)
   add_subdirectory(${compactnsearch_SOURCE_DIR} CompactNSearch)
-  
   target_link_libraries(${PROJECT_NAME} INTERFACE CompactNSearch)
-
 else(${DCA_USE_COMPACT_N_SEARCH})
-
   target_compile_definitions(${PROJECT_NAME} INTERFACE -DBUILD_COMPACT_N_SEARCH=0)
-
 endif(${DCA_USE_COMPACT_N_SEARCH})
 
 if(${DCA_BUILD_EXAMPLES})
-
   add_subdirectory(examples)
-
 endif(${DCA_BUILD_EXAMPLES})
