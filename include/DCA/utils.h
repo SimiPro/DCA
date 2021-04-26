@@ -49,7 +49,6 @@ overloaded(Ts...) -> overloaded<Ts...>;
 #endif
 
 #define EPSILON 1e-8
-#define deltaFD 1e-6
 
 inline double sigmoid(double x, double scale, double shift = 0.5) {
     return 1.0 / (1.0 + std::exp(-1.0 * scale * (x - shift)));

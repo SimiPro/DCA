@@ -67,6 +67,8 @@ public:
     using d2DdP2_fv = std::function<void(der_m& d2DdP2, const dof_v& P,
                                          const props_v& props)>;
 
+    static double deltaFD() { static double deltaFD_ = 1e-6; return deltaFD_;}
+
     static void estimate_dDdP(der_v& dDdP, const dof_v& P, const props_v& props,
                               evaluate_f evaluate) {
         dof_v p_der(P);
@@ -74,15 +76,15 @@ public:
         double f_P, f_M;
         for (uint i = StartDer; i < StartDer + NumDer; i++) {
             double tmpVal = p_der(i);
-            p_der(i) = tmpVal + deltaFD;
+            p_der(i) = tmpVal + deltaFD();
 
             f_P = evaluate(p_der, props);
-            p_der(i) = tmpVal - deltaFD;
+            p_der(i) = tmpVal - deltaFD();
 
             f_M = evaluate(p_der, props);
             p_der(i) = tmpVal;
 
-            dDdP(i - StartDer) = (f_P - f_M) / (2 * deltaFD);
+            dDdP(i - StartDer) = (f_P - f_M) / (2 * deltaFD());
         }
     }
 
@@ -121,15 +123,15 @@ public:
         der_v f_P, f_M;
         for (uint i = StartDer; i < NumDer + StartDer; i++) {
             double tmpVal = p_der(i);
-            p_der(i) = tmpVal + deltaFD;
+            p_der(i) = tmpVal + deltaFD();
 
             evaluate(f_P, p_der, props);
-            p_der(i) = tmpVal - deltaFD;
+            p_der(i) = tmpVal - deltaFD();
 
             evaluate(f_M, p_der, props);
             p_der(i) = tmpVal;
 
-            d2DdP2.col(i - StartDer) = (f_P - f_M) / (2 * deltaFD);
+            d2DdP2.col(i - StartDer) = (f_P - f_M) / (2 * deltaFD());
         }
     }
 
