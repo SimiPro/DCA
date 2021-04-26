@@ -100,8 +100,10 @@ public:
                   << ANSI_COLOR_DEFAULT << std::endl;
         for (int i = 0; i < NumDer; i++) {
             if (fabs(analytic_dDdP(i) - fd_dDdP(i)) > 1e-5) {
-                std::cout << ANSI_COLOR_RED << i << " does not match."
-                          << ANSI_COLOR_DEFAULT << std::endl;
+                std::cout << ANSI_COLOR_RED << i
+                          << " does not match. (Analytic: " << analytic_dDdP(i)
+                          << ", FD: " << fd_dDdP(i) << ")" << ANSI_COLOR_DEFAULT
+                          << std::endl;
                 hasMismatch = true;
             }
         }
@@ -147,8 +149,10 @@ public:
             for (int j = 0; j < NumDer; j++) {
                 if (fabs(analytic_d2DdP2(i, j) - fd_d2DdP2(i, j)) > 1e-5) {
                     std::cout << ANSI_COLOR_RED << i << "/" << j
-                              << " does not match." << ANSI_COLOR_DEFAULT
-                              << std::endl;
+                              << " does not match. (Analytic: "
+                              << analytic_d2DdP2(i, j)
+                              << ", FD: " << fd_d2DdP2(i, j) << ")"
+                              << ANSI_COLOR_DEFAULT << std::endl;
                     hasMismatch = true;
                 }
             }

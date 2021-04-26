@@ -25,6 +25,9 @@ using Matrix6d = Eigen::Matrix<double, 6, 6>;
 using Vector9d = Eigen::Matrix<double, 9, 1>;
 using Matrix9d = Eigen::Matrix<double, 9, 9>;
 
+using Vector12d = Eigen::Matrix<double, 12, 1>;
+using Matrix12d = Eigen::Matrix<double, 12, 12>;
+
 // Easier access to any dynamic matrix
 using Eigen::MatrixXd;
 
