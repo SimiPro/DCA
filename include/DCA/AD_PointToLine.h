@@ -4,7 +4,7 @@
 #include <Eigen/Core>
 
 namespace PointToLineSegmentDistance_CodeGen {
-void AD_PointToLineSegmentDistance(const Eigen::Matrix<double, 9, 1>& x_e,
+inline void AD_PointToLineSegmentDistance(const Eigen::Matrix<double, 9, 1>& x_e,
                                    double sigScale, double& objVal) {
     double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6,
         _i_var7, _i_var8, _i_var9, _i_var10, _i_var11, _i_var12, _i_var13,
@@ -58,7 +58,7 @@ void AD_PointToLineSegmentDistance(const Eigen::Matrix<double, 9, 1>& x_e,
     _i_var41 = std::sqrt(_i_var40);
     objVal = _i_var41;
 }
-void AD_PointToLineSegmentDistanceGradient(
+inline void AD_PointToLineSegmentDistanceGradient(
     const Eigen::Matrix<double, 9, 1>& x_e, double sigScale,
     Eigen::Matrix<double, 9, 1>& gradient) {
     double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6,
@@ -201,7 +201,7 @@ void AD_PointToLineSegmentDistanceGradient(
     gradient(7, 0) = _i_var91;
     gradient(8, 0) = _i_var92;
 }
-void AD_PointToLineSegmentDistanceHessian(
+inline void AD_PointToLineSegmentDistanceHessian(
     const Eigen::Matrix<double, 9, 1>& x_e, double sigScale,
     Eigen::Matrix<double, 9, 9>& hessian) {
     double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6,
