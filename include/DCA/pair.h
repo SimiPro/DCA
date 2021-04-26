@@ -94,10 +94,10 @@ public:
 
         for (size_t i = 0; i < primitives.size(); i++) {
             Vector3d pos = std::visit(
-                overloaded{[](const Sphere &cp) { return cp.getPosition(); },
+                overloaded{[](const Sphere &cp) { return cp.position; },
                            [](const Capsule &cp) {
-                               return Vector3d(0.5 * (cp.getStartPosition() +
-                                                      cp.getEndPosition()));
+                               return Vector3d(0.5 * (cp.startPosition +
+                                                      cp.endPosition));
                            },
                            [](const primitive_t &cp) {
                                throw std::logic_error(

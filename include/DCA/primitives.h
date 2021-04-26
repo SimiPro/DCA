@@ -23,8 +23,7 @@ namespace DCA {
         Vector3d startPosition;
         Vector3d endPosition;
         double radius;
-    }
-
+    };
 
     using primitive_t = std::variant<Sphere, Capsule>;
 
