@@ -17,9 +17,14 @@ int main(int argc, char const *argv[]) {
     Vector12d P12;
     P12 << P9, 4, 7, 6;
 
-    Vector2d props;
+    Vector2d props;  // radius for both primitives
     props << 1, 0.8;
 
+    CapsuleDistanceObjective obj;
+    Vector2d X;
+    CapsuleVsCapsule::solveForX(P12, X);
+
+    // Checking pairwise
     SphereVsSphere::check_dDdP_3(P6, props);
     SphereVsSphere::check_dDdP_6(P6, props);
 
@@ -37,15 +42,15 @@ int main(int argc, char const *argv[]) {
     CapsuleVsCapsule::check_dDdP_6(P12, props);
     CapsuleVsCapsule::check_dDdP_12(P12, props);
 
+    // The Hessians are only approximations, therefore the FD check fails.
     CapsuleVsCapsule::check_d2DdP2_6(P12, props);
     CapsuleVsCapsule::check_d2DdP2_12(P12, props);
 
+    CapsuleVsCapsule::check_dXdP_12(P12, X);
+
     // Checking CapsuleDistanceObjective
-    CapsuleDistanceObjective obj;
-    Vector2d X;
-    CapsuleVsCapsule::solveForX(P12, X);
     obj.check_dOdX_2(X, P12);
-    obj.check_dOdX_2(X, P12);
+    obj.check_d2OdX2_2(X, P12);
 
     obj.check_dDdX_2(X, P12);
     obj.check_d2DdX2_2(X, P12);

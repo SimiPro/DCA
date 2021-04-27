@@ -14,7 +14,6 @@
 #include <iostream>
 
 #include "utils.h"
-#include "FD.h"
 
 namespace DCA {
 
@@ -34,12 +33,15 @@ public:
      * @param X The solving variable.
      */
     virtual double compute_O(const P_v& P, const X_v& X) const = 0;
+
     /**
      * Computes the derivative of the objective value with respect to X value of this.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
+
     virtual void compute_dOdX(X_v& dOdX, const P_v& P, const X_v& X) const = 0;
+
     /**
      * Computes the second derivative of the objective value with respect to X value of this.
      * @param P Some parameters for the objective.

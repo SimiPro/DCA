@@ -179,6 +179,23 @@ namespace DCA {
             NAME);                                                            \
     }
 
+#define FD_CHECK_dXdP(NumDer, NumDofs, NumProps, StartDer, NAME)       \
+    static void check_dXdP_##NumDer(                                   \
+        const Eigen::Matrix<double, NumDofs, 1>& P,                    \
+        const Eigen::Matrix<double, NumProps, 1>& X) {                 \
+        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_dXdP(     \
+            P, X,                                                      \
+            [&](const Eigen::Matrix<double, NumDofs, 1>& P,            \
+                Eigen::Matrix<double, NumProps, 1>& X) -> void {       \
+                solveForX(P, X);                                       \
+            },                                                         \
+            [&](Eigen::Matrix<double, NumProps, NumDer>& dXdP,         \
+                const Eigen::Matrix<double, NumDofs, 1>& P,            \
+                const Eigen::Matrix<double, NumProps, 1>& X) -> void { \
+                compute_dXdP(dXdP, P, X);                              \
+            },                                                         \
+            NAME);                                                     \
+    }
 template <int NumDer, int NumDofs, int NumProps, int StartDer>
 class FD_Check {
 public:
@@ -198,6 +215,7 @@ public:
     using d2DdP2_fv = std::function<void(der_m& d2DdP2, const dof_v& P,
                                          const props_v& props)>;
 
+    using evaluate_dXdP_fv = std::function<void(const dof_v& P, props_v& X)>;
     using evaluate_d2DdXdP_fv =
         std::function<void(props_v& der, const dof_v& P, const props_v& X)>;
     using d2DdXdP_fv =
@@ -345,6 +363,56 @@ public:
                               << analytic_d2DdXdP(i, j)
                               << ", FD: " << fd_d2DdXdP(i, j) << ")"
                               << ANSI_COLOR_DEFAULT << std::endl;
+                    hasMismatch = true;
+                }
+            }
+        }
+
+        if (!hasMismatch) {
+            std::cout << ANSI_COLOR_GREEN << "All Good." << ANSI_COLOR_DEFAULT
+                      << std::endl;
+        }
+    }
+
+    static void estimate_dXdP(d2DdXdP_m& dXdP, const dof_v& P, const props_v& X,
+                              evaluate_dXdP_fv evaluate) {
+        dof_v p_der(P);
+
+        props_v f_P, f_M;
+        for (uint i = StartDer; i < StartDer + NumDer; i++) {
+            double tmpVal = p_der(i);
+            p_der(i) = tmpVal + deltaFD();
+
+            evaluate(p_der, f_P);
+            p_der(i) = tmpVal - deltaFD();
+
+            evaluate(p_der, f_M);
+            p_der(i) = tmpVal;
+
+            dXdP.col(i - StartDer) = (f_P - f_M) / (2 * deltaFD());
+        }
+    }
+
+    static void check_dXdP(const dof_v& P, const props_v& X,
+                           evaluate_dXdP_fv evaluate, d2DdXdP_fv analytic,
+                           const char* name) {
+        d2DdXdP_m analytic_dXdP;
+        analytic(analytic_dXdP, P, X);
+
+        d2DdXdP_m fd_dXdP;
+        estimate_dXdP(fd_dXdP, P, X, evaluate);
+
+        bool hasMismatch = false;
+        std::cout << ANSI_COLOR_CYAN << "Checking " << name
+                  << ANSI_COLOR_DEFAULT << std::endl;
+        for (int i = 0; i < NumProps; i++) {
+            for (int j = 0; j < NumDer; j++) {
+                if (fabs(analytic_dXdP(i, j) - fd_dXdP(i, j)) > 1e-5) {
+                    std::cout
+                        << ANSI_COLOR_RED << i << "/" << j
+                        << " does not match. (Analytic: " << analytic_dXdP(i, j)
+                        << ", FD: " << fd_dXdP(i, j) << ")"
+                        << ANSI_COLOR_DEFAULT << std::endl;
                     hasMismatch = true;
                 }
             }

@@ -78,13 +78,11 @@ public:
         d2DdP2 = d2DdP2_full.block(0, 0, 6, 6);
     }
 
+    FD_CHECK_dXdP(12, 12, 2, 0, "CapsuleVsCapsule - dXdP_12");
     static void compute_dXdP(Eigen::Matrix<double, 2, 12>& dXdP,
                              const Vector12d& P, const Vector2d& X) {
-        Matrix2d d2OdX2;
-        objective().compute_d2OdX2(d2OdX2, P, X);
-
-        Matrix2d dGdX = d2OdX2;
-        dGdX(0, 1) = dGdX(1, 0);  // is this still needed?
+        Matrix2d dGdX;
+        objective().compute_d2OdX2(dGdX, P, X);
 
         dXdP_m dGdP;
         objective().compute_d2DdXdP(dGdP, P, X);

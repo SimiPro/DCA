@@ -5,6 +5,7 @@
 #include "Sensitivity.h"
 #include "SoftUpperLimitConstraint.h"
 #include "utils.h"
+#include "FD.h"
 
 namespace DCA {
 
@@ -74,7 +75,6 @@ public:
                         const Vector2d& X) const {
         //--- Shortest distance
         compute_d2DdX2(d2OdX2, P, X);
-        d2OdX2(1, 0) = 0.;
 
         //--- Regularizer
         for (int i = 0; i < maxRegularizerIndex; i++)
