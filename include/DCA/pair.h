@@ -41,7 +41,8 @@ public:
 
 /**
  * This generator creates all possible permutations of pairs.
- * This means, the amount of pairs created is n^2, where n = #primitives.
+ * This means, the amount of pairs created is n^2/2, where n = #primitives.
+ * Pairs are not returned twice (0, 1) and (1, 0).
  */
 class PermutationPairGenerator : public PairGenerator {
 public:
@@ -55,9 +56,8 @@ public:
         ret.reserve(primitives.size() * primitives.size() - primitives.size());
 
         for (size_t i = 0; i < primitives.size(); i++) {
-            for (size_t j = 0; j < primitives.size(); j++) {
+            for (size_t j = i + 1; j < primitives.size(); j++) {
                 // skip primitve self-collision
-                if (i == j) continue;
                 ret.push_back({i, j});
             }
         }
@@ -96,8 +96,8 @@ public:
             Vector3d pos = std::visit(
                 overloaded{[](const Sphere &cp) { return cp.position; },
                            [](const Capsule &cp) {
-                               return Vector3d(0.5 * (cp.startPosition +
-                                                      cp.endPosition));
+                               return Vector3d(
+                                   0.5 * (cp.startPosition + cp.endPosition));
                            },
                            [](const primitive_t &cp) {
                                throw std::logic_error(
@@ -122,7 +122,7 @@ public:
             for (size_t j = 0; j < ps.n_neighbors(id, i); j++) {
                 // return point id of the j-th neighbor of the i-th particle in the point set
                 const unsigned pid = ps.neighbor(id, i, j);
-
+                if(pid <= i) continue; // skip this pair, as it is already added as (pid,i)
                 ret.push_back({i, pid});
             }
         }

@@ -28,6 +28,9 @@ int main(int argc, char const* argv[]) {
     auto pairs_permutatation = ppg.generate(primitives);
     std::cout << "Permutation reported " << pairs_permutatation.size()
               << " pairs." << std::endl;
+    for(auto& p : pairs_permutatation) {
+            std::cout << p.first << "/" << p.second << std::endl;
+    }
 
 #if BUILD_COMPACT_N_SEARCH
 
@@ -36,6 +39,9 @@ int main(int argc, char const* argv[]) {
 
     std::cout << "Neighbors reported " << pairs_neighbors.size() << " pairs."
               << std::endl;
+    for(auto& p : pairs_neighbors) {
+            std::cout << p.first << "/" << p.second << std::endl;
+    }
 
 #endif
 
