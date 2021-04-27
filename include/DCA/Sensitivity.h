@@ -8,51 +8,55 @@ namespace DCA {
 /**
  * This class represents an objective used in Sensitivity Analysis.
  */
+template <int SizeP, int SizeX>
 class SensitivityObjective {
+    using P_v = Eigen::Matrix<double, SizeP, 1>;
+    using X_v = Eigen::Matrix<double, SizeX, 1>;
+    using X_m = Eigen::Matrix<double, SizeX, SizeX>;
+    using P_m = Eigen::Matrix<double, SizeP, SizeP>;
+    using XP_m = Eigen::Matrix<double, SizeX, SizeP>;
     /**
      * Computes the distance for a given P and X.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual double compute_D(const VectorXd& P, const VectorXd& X) const = 0;
+    virtual double compute_D(const P_v& P, const X_v& X) const = 0;
 
     /**
      * Computes the first derivative of the distance with respect to X.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_dDdX(VectorXd& dDdX, const VectorXd& P,
-                              const VectorXd& X) const = 0;
+    virtual void compute_dDdX(X_v& dDdX, const P_v& P, const X_v& X) const = 0;
 
     /**
      * Computes the second derivative of the distance with respect to X.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_d2DdX2(MatrixXd& d2DdX2, const VectorXd& P,
-                                const VectorXd& X) const = 0;
+    virtual void compute_d2DdX2(X_m& d2DdX2, const P_v& P,
+                                const X_v& X) const = 0;
 
     /**
      * Computes the first derivative of the distance with respect to P.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_dDdP(VectorXd& dDdP, const VectorXd& P,
-                              const VectorXd& X) const = 0;
+    virtual void compute_dDdP(P_v& dDdP, const P_v& P, const X_v& X) const = 0;
     /**
      * Computes the second derivative of the distance with respect to P.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_d2DdP2(MatrixXd& d2DdP2, const VectorXd& P,
-                                const VectorXd& X) const = 0;
+    virtual void compute_d2DdP2(P_m& d2DdP2, const P_v& P,
+                                const X_v& X) const = 0;
     /**
      * Computes the second derivative of the distance with respect to X and P.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_d2DdXdP(MatrixXd& d2DdXdP, const VectorXd& P,
-                                 const VectorXd& X) const = 0;
+    virtual void compute_d2DdXdP(XP_m& d2DdXdP, const P_v& P,
+                                 const X_v& X) const = 0;
 };
 
 }  // namespace DCA

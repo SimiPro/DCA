@@ -1,3 +1,8 @@
+// Tell the library that we want to run FD checks.
+// This will automatically make functions public,
+// and set solver residuals.
+#define RUN_FD_CHECK
+
 #include <DCA/CapsuleVsCapsule.h>
 #include <DCA/SphereVsCapsule.h>
 #include <DCA/SphereVsSphere.h>
@@ -34,6 +39,21 @@ int main(int argc, char const *argv[]) {
 
     CapsuleVsCapsule::check_d2DdP2_6(P12, props);
     CapsuleVsCapsule::check_d2DdP2_12(P12, props);
+
+    // Checking CapsuleDistanceObjective
+    CapsuleDistanceObjective obj;
+    Vector2d X;
+    CapsuleVsCapsule::solveForX(P12, X);
+    obj.check_dOdX_2(X, P12);
+    obj.check_dOdX_2(X, P12);
+
+    obj.check_dDdX_2(X, P12);
+    obj.check_d2DdX2_2(X, P12);
+
+    obj.check_dDdP_12(P12, X);
+    obj.check_d2DdP2_12(P12, X);
+
+    obj.check_d2DdXdP_12(P12, X);
 
     return 0;
 }

@@ -4,6 +4,7 @@
 #include "Newton.h"
 #include "Sensitivity.h"
 #include "SoftUpperLimitConstraint.h"
+#include "utils.h"
 
 namespace DCA {
 
@@ -14,15 +15,15 @@ namespace DCA {
  * We solve it using Newont's Method (hence the inheritance of Objective).
  * Furthermore, we provide all derivatives for Sensitivity Analysis.
  */
-class CapsuleDistanceObjective : public NewtonObjective,
-                                 public SensitivityObjective {
+class CapsuleDistanceObjective : public NewtonObjective<12, 2>,
+                                 public SensitivityObjective<12, 2> {
 public:
     /**
      * @copydoc NewtonObjective::compute_O
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    double compute_O(const VectorXd& P, const VectorXd& X) const override {
+    double compute_O(const Vector12d& P, const Vector2d& X) const override {
         double value = 0.0;
 
         //--- Shortest distance
@@ -46,8 +47,9 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_dOdX(VectorXd& dOdX, const VectorXd& P,
-                      const VectorXd& X) const {
+    FD_CHECK_dOdX(2, 2, 12, 0, "CapsuleDistanceObjective - dOdX");
+    void compute_dOdX(Vector2d& dOdX, const Vector12d& P,
+                      const Vector2d& X) const {
         //--- Shortest distance
         compute_dDdX(dOdX, P, X);
 
@@ -67,8 +69,9 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_d2OdX2(MatrixXd& d2OdX2, const VectorXd& P,
-                        const VectorXd& X) const {
+    FD_CHECK_d2OdX2(2, 2, 12, 0, "CapsuleDistanceObjective - d2OdX2");
+    void compute_d2OdX2(Matrix2d& d2OdX2, const Vector12d& P,
+                        const Vector2d& X) const {
         //--- Shortest distance
         compute_d2DdX2(d2OdX2, P, X);
         d2OdX2(1, 0) = 0.;
@@ -89,8 +92,9 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_dDdX(VectorXd& dOdX, const VectorXd& P,
-                      const VectorXd& X) const {
+    FD_CHECK_dDdX(2, 2, 12, 0, "CapsuleDistanceObjective - dDdX");
+    void compute_dDdX(Vector2d& dOdX, const Vector12d& P,
+                      const Vector2d& X) const {
         Vector3d P1 = P.segment(0, 3);
         Vector3d P2 = P.segment(3, 3);
         Vector3d P3 = P.segment(6, 3);
@@ -102,7 +106,6 @@ public:
         double v_norm = v.norm();
         if (v_norm < 1e-8) v_norm = 1e-8;
 
-        dOdX.resize(2);
         dOdX[0] = (P2 - P1).transpose() * (v / v_norm);
         dOdX[1] = -(P4 - P3).transpose() * (v / v_norm);
     }
@@ -111,8 +114,9 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_d2DdX2(MatrixXd& d2OdX2, const VectorXd& P,
-                        const VectorXd& X) const override {
+    FD_CHECK_d2DdX2(2, 2, 12, 0, "CapsuleDistanceObjective - d2DdX2");
+    void compute_d2DdX2(Matrix2d& d2OdX2, const Vector12d& P,
+                        const Vector2d& X) const override {
         Vector3d P1 = P.segment(0, 3);
         Vector3d P2 = P.segment(3, 3);
         Vector3d P3 = P.segment(6, 3);
@@ -123,7 +127,6 @@ public:
         Vector3d v = P12 - P34;
         double v_norm = v.norm();
         if (v_norm < 1e-8) v_norm = 1e-8;
-        d2OdX2.resize(2, 2);
         d2OdX2(0, 0) = (double)((P2 - P1).transpose() *
                                 ((P2 - P1) * v_norm -
                                  (v * (P2 - P1).transpose() * v / v_norm))) /
@@ -147,7 +150,7 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    double compute_D(const VectorXd& P, const VectorXd& X) const override {
+    double compute_D(const Vector12d& P, const Vector2d& X) const override {
         Vector3d P12 = P.head(3) + X[0] * (P.segment(3, 3) - P.head(3));
         Vector3d P34 = P.segment(6, 3) + X[1] * (P.tail(3) - P.segment(6, 3));
         return (P12 - P34).norm();
@@ -158,8 +161,9 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_dDdP(VectorXd& dDdP, const VectorXd& P,
-                      const VectorXd& X) const override {
+    FD_CHECK_dDdP_NON_STATIC(12, 12, 2, 0, "CapsuleDistanceObjective - dDdP");
+    void compute_dDdP(Vector12d& dDdP, const Vector12d& P,
+                      const Vector2d& X) const override {
         Vector3d P1 = P.segment(0, 3);
         Vector3d P2 = P.segment(3, 3);
         Vector3d P3 = P.segment(6, 3);
@@ -171,7 +175,6 @@ public:
         double v_norm = v.norm();
         if (v_norm < 1e-8) v_norm = 1e-8;
 
-        dDdP.resize(12);
         dDdP.segment(0, 3) = (1.0 - X[0]) * (v / v_norm);
         dDdP.segment(3, 3) = X[0] * (v / v_norm);
         dDdP.segment(6, 3) = -(1. - X[1]) * (v / v_norm);
@@ -183,8 +186,10 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_d2DdP2(MatrixXd& d2DdP2, const VectorXd& P,
-                        const VectorXd& X) const override {
+    FD_CHECK_d2DdP2_NON_STATIC(12, 12, 2, 0,
+                               "CapsuleDistanceObjective - d2DdP2");
+    void compute_d2DdP2(Matrix12d& d2DdP2, const Vector12d& P,
+                        const Vector2d& X) const override {
         const double t12 = X[0];
         const double t34 = X[1];
 
@@ -207,7 +212,6 @@ public:
         Matrix3d ppD;
         double du = 1.0 - t12;
 
-        d2DdP2.resize(12, 12);
         ////// pDpP1 = (1.0 - t12) * (v / v_norm)
         {  //--- dP1
             du_p = (1.0 - t12) * (1.0 - t12);
@@ -289,8 +293,9 @@ public:
      * @param P The four points, stacked.
      * @param X The current point on the two lines.
      */
-    void compute_d2DdXdP(MatrixXd& d2DdXdP, const VectorXd& P,
-                         const VectorXd& X) const override {
+    FD_CHECK_d2DdXdP(12, 12, 2, 0, "CapsuleDistanceObjective - d2DdXdP");
+    void compute_d2DdXdP(Eigen::Matrix<double, 2, 12>& d2DdXdP,
+                         const Vector12d& P, const Vector2d& X) const override {
         Vector3d P1 = P.segment(0, 3);
         Vector3d P2 = P.segment(3, 3);
         Vector3d P3 = P.segment(6, 3);
@@ -303,12 +308,10 @@ public:
         if (v_norm < 1e-8) v_norm = 1e-8;
         Matrix3d I = Matrix3d::Identity();
 
-        d2DdXdP.resize(2, 12);
-
-        auto setEntries = [](Eigen::MatrixXd& d2DdXdP, const double& du,
-                             const double& dv, const Vector3d& du_p,
-                             const Vector3d& dv_p, const int& index_x,
-                             const int& index_p) {
+        auto setEntries = [](Eigen::Matrix<double, 2, 12>& d2DdXdP,
+                             const double& du, const double& dv,
+                             const Vector3d& du_p, const Vector3d& dv_p,
+                             const int& index_x, const int& index_p) {
             d2DdXdP.block(index_x, index_p, 1, 3) =
                 ((du_p * dv - du * dv_p) / (dv * dv)).transpose();
         };

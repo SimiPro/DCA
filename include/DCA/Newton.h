@@ -9,44 +9,48 @@
 #ifndef __DCA_NEWTON_H__
 #define __DCA_NEWTON_H__
 
-#include <cmath>  // for std::isfinite
 #include <Eigen/Dense>
+#include <cmath>  // for std::isfinite
 #include <iostream>
 
 #include "utils.h"
+#include "FD.h"
 
 namespace DCA {
-
 
 /**
  * This class represents an objective, which can be used together with the NewtonMinimizer.
  */
+template <int SizeP, int SizeX>
 class NewtonObjective {
 public:
+    using P_v = Eigen::Matrix<double, SizeP, 1>;
+    using X_v = Eigen::Matrix<double, SizeX, 1>;
+    using X_m = Eigen::Matrix<double, SizeX, SizeX>;
+
     /**
      * Computes the Objective value of this.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual double compute_O(const VectorXd& P, const VectorXd& X) const = 0;
+    virtual double compute_O(const P_v& P, const X_v& X) const = 0;
     /**
      * Computes the derivative of the objective value with respect to X value of this.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_dOdX(VectorXd& dOdX, const VectorXd& P,
-                              const VectorXd& X) const = 0;
+    virtual void compute_dOdX(X_v& dOdX, const P_v& P, const X_v& X) const = 0;
     /**
      * Computes the second derivative of the objective value with respect to X value of this.
      * @param P Some parameters for the objective.
      * @param X The solving variable.
      */
-    virtual void compute_d2OdX2(MatrixXd& d2OdX2, const VectorXd& P,
-                                const VectorXd& X) const = 0;
+    virtual void compute_d2OdX2(X_m& d2OdX2, const P_v& P,
+                                const X_v& X) const = 0;
 
-    virtual void preOptimizationStep(const VectorXd& P, const VectorXd& X) {}
-    virtual void postOptimizationStep(const VectorXd& P, const VectorXd& X) {}
-    virtual void postLineSearchStep(const VectorXd& P, const VectorXd& X) {}
+    virtual void preOptimizationStep(const P_v& P, const X_v& X) {}
+    virtual void postOptimizationStep(const P_v& P, const X_v& X) {}
+    virtual void postLineSearchStep(const P_v& P, const X_v& X) {}
 
 public:
     double weight;
@@ -57,8 +61,12 @@ public:
  * don't store class members, but
  * rather give by reference/value
  */
+template <int SizeP, int SizeX>
 class NewtonOptimizer {
 public:
+    using P_v = Eigen::Matrix<double, SizeP, 1>;
+    using X_v = Eigen::Matrix<double, SizeX, 1>;
+    using X_m = Eigen::Matrix<double, SizeX, SizeX>;
     NewtonOptimizer(double solverResidual = 1e-5,
                     unsigned int maxLineSearchIterations = 15)
         : m_solverResidual(solverResidual),
@@ -70,8 +78,8 @@ public:
      * Optimize the objective.
      * @return true if the solver converged, false otherwise.
      */
-    bool optimize(NewtonObjective& objective, const VectorXd& P, VectorXd& x,
-                  unsigned int maxIterations = 100) {
+    bool optimize(NewtonObjective<SizeP, SizeX>& objective, const P_v& P,
+                  X_v& x, unsigned int maxIterations = 100) {
         m_x_tmp = x;
         bool betterSolutionFound = false;
         bool converged = false;
@@ -98,7 +106,8 @@ private:
     /**
      * Compute the search direction by searching for the gradient direction
      */
-    void computeSearchDirection(const VectorXd& P, NewtonObjective& objective) {
+    void computeSearchDirection(const P_v& P,
+                                NewtonObjective<SizeP, SizeX>& objective) {
         objective.compute_dOdX(m_gradient, P, m_x_tmp);
         objective.compute_d2OdX2(m_hessian, P, m_x_tmp);
 
@@ -111,14 +120,14 @@ private:
     /**
      * Perform line search on the objective
      */
-    bool doLineSearch(const VectorXd& P, NewtonObjective& objective) {
+    bool doLineSearch(const P_v& P, NewtonObjective<SizeP, SizeX>& objective) {
         if (m_maxLineSearchIterations < 1) {
             m_x_tmp = m_x_tmp - m_searchDir * m_lineSearchStartValue;
             return true;
         }
 
         double alpha = m_lineSearchStartValue;
-        VectorXd xc(m_x_tmp);
+        X_v xc(m_x_tmp);
         double initialObjectiveValue = objective.compute_O(P, xc);
 
         for (int j = 0; j < m_maxLineSearchIterations; j++) {
@@ -140,16 +149,14 @@ private:
     /**
      * Solve the system A * y = x for y.
      */
-    static void solveLinearSystem(VectorXd& y, const MatrixXd& A,
-                                  const VectorXd& x) {
+    static void solveLinearSystem(X_v& y, const X_m& A, const X_v& x) {
         y = A.colPivHouseholderQr().solve(x);
     }
 
     /**
      * Apply dynamic regularization on the linear system A * y = x
      */
-    static void applyDynamicRegularization(VectorXd& y, MatrixXd& A,
-                                           const VectorXd& x) {
+    static void applyDynamicRegularization(X_v& y, X_m& A, const X_v& x) {
         double dotProduct = y.dot(x);
         if (dotProduct <= 0. && x.squaredNorm() > 0) {
             VectorXd stabRegularizer(A.rows());
@@ -170,14 +177,21 @@ private:
     }
 
 private:
-    double m_solverResidual; ///< residual of the solver
-    unsigned int m_maxLineSearchIterations; ///< how many line search steps should be done
-    double m_lineSearchStartValue = 1.0; ///< the starting value of the line search
-    bool m_useDynamicRegularization = true; ///< whether to use dynamic regularization
+    ///< residual of the solver
+    double m_solverResidual;
+    ///< how many line search steps should be done
+    unsigned int m_maxLineSearchIterations;
+    ///< the starting value of the line search
+    double m_lineSearchStartValue = 1.0;
+    ///< whether to use dynamic regularization
+    bool m_useDynamicRegularization = true;
 
-    double m_objectiveValue; ///< the current objective value
-    VectorXd m_x_tmp, m_searchDir, m_gradient; ///< some private members, could also be given via parameters
-    MatrixXd m_hessian; ///< and the hessian
+    ///< the current objective value
+    double m_objectiveValue;
+    ///< some private members, could also be given via parameters
+    X_v m_x_tmp, m_searchDir, m_gradient;
+    ///< and the hessian
+    X_m m_hessian;
 };
 
 }  // namespace DCA

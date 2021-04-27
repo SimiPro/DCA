@@ -11,6 +11,7 @@ namespace DCA {
 
 class CapsuleVsCapsule {
 public:
+    using dXdP_m = Eigen::Matrix<double, 2, 12>;
     static double compute_D(const Vector12d& P, const Vector2d& props) {
         Vector2d X;
 
@@ -25,13 +26,13 @@ public:
         Vector2d X;
         solveForX(P, X);
 
-        MatrixXd dXdP;
+        dXdP_m dXdP;
         compute_dXdP(dXdP, P, X);
 
-        VectorXd pDpX;
+        Vector2d pDpX;
         objective().compute_dDdX(pDpX, P, X);
 
-        VectorXd pDpP;
+        Vector12d pDpP;
         objective().compute_dDdP(pDpP, P, X);
 
         dDdP = dXdP.transpose() * pDpX + pDpP;
@@ -52,16 +53,16 @@ public:
         Vector2d X;
         solveForX(P, X);
 
-        MatrixXd dXdP;
+        dXdP_m dXdP;
         compute_dXdP(dXdP, P, X);
 
-        MatrixXd p2DpX2;
+        Matrix2d p2DpX2;
         objective().compute_d2DdX2(p2DpX2, P, X);
 
-        MatrixXd p2DpP2;
+        Matrix12d p2DpP2;
         objective().compute_d2DdP2(p2DpP2, P, X);
 
-        MatrixXd p2DpXpP;
+        dXdP_m p2DpXpP;
         objective().compute_d2DdXdP(p2DpXpP, P, X);
 
         d2DdP2 = dXdP.transpose() * p2DpX2 * dXdP + dXdP.transpose() * p2DpXpP +
@@ -77,36 +78,43 @@ public:
         d2DdP2 = d2DdP2_full.block(0, 0, 6, 6);
     }
 
-    static void compute_dXdP(MatrixXd& dXdP, const VectorXd& P,
-                             const VectorXd& X) {
-        dXdP.resize(2, 12);
-        MatrixXd d2OdX2;
+    static void compute_dXdP(Eigen::Matrix<double, 2, 12>& dXdP,
+                             const Vector12d& P, const Vector2d& X) {
+        Matrix2d d2OdX2;
         objective().compute_d2OdX2(d2OdX2, P, X);
 
-        MatrixXd dGdX = d2OdX2;
+        Matrix2d dGdX = d2OdX2;
         dGdX(0, 1) = dGdX(1, 0);  // is this still needed?
 
-        MatrixXd dGdP;
+        dXdP_m dGdP;
         objective().compute_d2DdXdP(dGdP, P, X);
 
         dXdP = -1. * dGdX.inverse() * dGdP;
     }
 
+#ifdef RUN_FD_CHECK
+public:
+#else
 private:
+#endif
+
     static void solveForX(const Vector12d& P, Vector2d& X) {
-        NewtonOptimizer optimizer;
+#ifdef RUN_FD_CHECK
+        // If we run FD checks, we set the solver residual lower.
+        NewtonOptimizer<12, 2> optimizer(1e-12, 15);
+#else
+        NewtonOptimizer<12, 2> optimizer;
+
+#endif
         X << 0.5, 0.5;
-        // ugly workaround because x here is const size
-        VectorXd x_tmp = X;
-        optimizer.optimize(objective(), P, x_tmp, 100);
-        X = x_tmp;
+        optimizer.optimize(objective(), P, X, 100);
     }
 
     /**
      * Compute the closest points on two lines based on P.
      */
     static void computeClosestPointOnLines(Vector3d& P12, Vector3d& P34,
-                                           const VectorXd& P) {
+                                           const Vector12d& P) {
         Vector2d X;
         solveForX(P, X);
         Vector3d P1 = P.segment(0, 3);
