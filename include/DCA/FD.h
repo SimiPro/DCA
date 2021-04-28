@@ -231,7 +231,7 @@ public:
         dof_v p_der(P);
 
         double f_P, f_M;
-        for (uint i = StartDer; i < StartDer + NumDer; i++) {
+        for (int i = StartDer; i < StartDer + NumDer; i++) {
             double tmpVal = p_der(i);
             p_der(i) = tmpVal + deltaFD();
 
@@ -278,7 +278,7 @@ public:
         dof_v p_der(P);
 
         der_v f_P, f_M;
-        for (uint i = StartDer; i < NumDer + StartDer; i++) {
+        for (int i = StartDer; i < NumDer + StartDer; i++) {
             double tmpVal = p_der(i);
             p_der(i) = tmpVal + deltaFD();
 
@@ -329,7 +329,7 @@ public:
         dof_v p_der(P);
 
         props_v f_P, f_M;
-        for (uint i = StartDer; i < NumDer + StartDer; i++) {
+        for (int i = StartDer; i < NumDer + StartDer; i++) {
             double tmpVal = p_der(i);
             p_der(i) = tmpVal + deltaFD();
 
@@ -379,7 +379,7 @@ public:
         dof_v p_der(P);
 
         props_v f_P, f_M;
-        for (uint i = StartDer; i < StartDer + NumDer; i++) {
+        for (int i = StartDer; i < StartDer + NumDer; i++) {
             double tmpVal = p_der(i);
             p_der(i) = tmpVal + deltaFD();
 
