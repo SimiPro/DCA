@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
-# FetchContent command is available with cmake >= 3.11
 include(FetchContent)
+include(CMakeDependentOption)
 
 macro(fetch what)
     FetchContent_GetProperties("${what}")
@@ -18,11 +18,22 @@ project("DCA" VERSION 0.1
 
 set(CMAKE_CXX_STANDARD 20)
 
-option(DCA_BUILD_EXAMPLES "Build examples" ON)
-option(DCA_USE_COMPACT_N_SEARCH "Build a Pair generator with the help of CompactNSearch" ON)
+option(DCA_BUILD_DEV_TOOLS "Build DEV tools (like FD and example app)" OFF)
+
+# These options are only available if we build dev tools (finite difference)
+cmake_dependent_option(DCA_BUILD_EXAMPLES "Build examples" ON DCA_BUILD_DEV_TOOLS OFF)
+
+# Let user choose to build CompactNSearch pair generator
+option(DCA_USE_COMPACT_N_SEARCH "Build a Pair generator with the help of CompactNSearch" ON )
 
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+
+if(DCA_BUILD_DEV_TOOLS)
+  target_compile_definitions(${PROJECT_NAME} INTERFACE -DDCA_DEV_TOOLS=1)
+else(DCA_BUILD_DEV_TOOLS)
+  target_compile_definitions(${PROJECT_NAME} INTERFACE -DDCA_DEV_TOOLS=0)
+endif(DCA_BUILD_DEV_TOOLS)
 
 target_include_directories(
   ${PROJECT_NAME}

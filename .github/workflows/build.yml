@@ -10,3 +10,5 @@ jobs:
       uses: actions/checkout@v2.0.0
     - name: Build project
       uses: nicledomaS/cmake_build_action@v1.3
+      with:
+        cmake_args: -DDCA_BUILD_DEV_TOOLS=ON

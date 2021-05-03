@@ -1,6 +1,20 @@
 #ifndef __DCA__FD_H__
 #define __DCA__FD_H__
 
+#if DCA_DEV_TOOLS == 0
+// Define empty macros
+#define FD_CHECK_dOdX(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_d2OdX2(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_dDdX(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_d2DdX2(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_d2DdXdP(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_dDdP(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_d2DdP2(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_dDdP_NON_STATIC(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_d2DdP2_NON_STATIC(NumDer, NumDofs, NumProps, StartDer, NAME)
+#define FD_CHECK_dXdP(NumDer, NumDofs, NumProps, StartDer, NAME)
+#else /* DCA_DEV_TOOLS == 0 */
+
 #include <iostream>
 
 #include "utils.h"
@@ -426,5 +440,7 @@ public:
 };
 
 }  // namespace DCA
+
+#endif /* DCA_DEV_TOOLS */
 
 #endif
