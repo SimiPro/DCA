@@ -86,7 +86,7 @@ public:
         bool betterSolutionFound = false;
         bool converged = false;
 
-        for (int i = 0; i < maxIterations; i++) {
+        for (unsigned int i = 0; i < maxIterations; i++) {
             objective.preOptimizationStep(P, m_x_tmp);
 
             computeSearchDirection(P, objective);
@@ -132,7 +132,7 @@ private:
         X_v xc(m_x_tmp);
         double initialObjectiveValue = objective.compute_O(P, xc);
 
-        for (int j = 0; j < m_maxLineSearchIterations; j++) {
+        for (unsigned int j = 0; j < m_maxLineSearchIterations; j++) {
             m_x_tmp = xc - m_searchDir * alpha;
             objective.postLineSearchStep(P, m_x_tmp);
             m_objectiveValue = objective.compute_O(P, m_x_tmp);

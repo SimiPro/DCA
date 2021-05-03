@@ -118,8 +118,8 @@ public:
 
         // Now get all neighbors and add them to the pairs list
         CompactNSearch::PointSet const &ps = nsearch.point_set(id);
-        for (int i = 0; i < ps.n_points(); i++) {
-            for (size_t j = 0; j < ps.n_neighbors(id, i); j++) {
+        for (unsigned int i = 0; i < ps.n_points(); i++) {
+            for (unsigned  j = 0; j < ps.n_neighbors(id, i); j++) {
                 // return point id of the j-th neighbor of the i-th particle in the point set
                 const unsigned pid = ps.neighbor(id, i, j);
                 if(pid <= i) continue; // skip this pair, as it is already added as (pid,i)
