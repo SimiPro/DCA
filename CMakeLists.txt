@@ -42,6 +42,9 @@ target_include_directories(
 
 find_package (Eigen3 3.3 NO_MODULE)
 if(NOT TARGET Eigen3::Eigen)
+  # Remove entry that has not been found
+  unset(Eigen3_DIR CACHE)
+
   # Now download eigen3
   # download as zip, so it's a bit smaller than downloading the whole repo
   FetchContent_Declare(
