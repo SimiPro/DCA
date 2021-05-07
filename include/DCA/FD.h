@@ -1,5 +1,7 @@
-#ifndef __DCA__FD_H__
-#define __DCA__FD_H__
+#ifndef __DCA_FD_H__
+#define __DCA_FD_H__
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 #if DCA_DEV_TOOLS == 0
 // Define empty macros
@@ -443,4 +445,6 @@ public:
 
 #endif /* DCA_DEV_TOOLS */
 
-#endif
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
+
+#endif /* __DCA_FD_H__ */

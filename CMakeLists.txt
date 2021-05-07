@@ -23,9 +23,6 @@ option(DCA_BUILD_DEV_TOOLS "Build DEV tools (like FD and example app)" OFF)
 # These options are only available if we build dev tools (finite difference)
 cmake_dependent_option(DCA_BUILD_EXAMPLES "Build examples" ON DCA_BUILD_DEV_TOOLS OFF)
 
-# Let user choose to build CompactNSearch pair generator
-option(DCA_USE_COMPACT_N_SEARCH "Build a Pair generator with the help of CompactNSearch" ON )
-
 add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
@@ -60,24 +57,6 @@ endif(NOT TARGET Eigen3::Eigen)
 
 target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
-
-if(${DCA_USE_COMPACT_N_SEARCH})
-  target_compile_definitions(${PROJECT_NAME} INTERFACE -DBUILD_COMPACT_N_SEARCH=1)
-  
-  # Now download CompactNSearch (from a fork)
-  FetchContent_Declare(
-    compactnsearch #
-    GIT_REPOSITORY https://github.com/digitalillusions/CompactNSearch.git #
-    GIT_TAG 011eb171c2cbfa536cd47b6a6ffdf90c9b0d40fd #
-  )
-  set(BUILD_DEMO OFF CACHE INTERNAL "") # Tell CompactNSearch to not build their demo
-  set(USE_DOUBLE_PRECISION ON CACHE INTERNAL "") # Tell CompactNSearch to use doubles instead of floats
-  fetch(compactnsearch)
-  add_subdirectory(${compactnsearch_SOURCE_DIR} CompactNSearch)
-  target_link_libraries(${PROJECT_NAME} INTERFACE CompactNSearch)
-else(${DCA_USE_COMPACT_N_SEARCH})
-  target_compile_definitions(${PROJECT_NAME} INTERFACE -DBUILD_COMPACT_N_SEARCH=0)
-endif(${DCA_USE_COMPACT_N_SEARCH})
 
 if(${DCA_BUILD_EXAMPLES})
   add_subdirectory(examples)

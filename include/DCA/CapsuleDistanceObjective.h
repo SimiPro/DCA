@@ -1,16 +1,16 @@
-#ifndef __DCA__CAPSULEDISTANCEOBJECTIVE_H__
-#define __DCA__CAPSULEDISTANCEOBJECTIVE_H__
+#ifndef __DCA_CAPSULEDISTANCEOBJECTIVE_H__
+#define __DCA_CAPSULEDISTANCEOBJECTIVE_H__
 
+#include "FD.h"
 #include "Newton.h"
 #include "Sensitivity.h"
 #include "SoftUpperLimitConstraint.h"
 #include "utils.h"
-#include "FD.h"
 
 namespace DCA {
 
 /**
- * This objective is used to solve the capsule-distance problem:
+ * This objective is used to solve the capsule-distance problems:
  * A capsule is represented as a line between two points.
  * We search now the shortest distance between two capsules, i.e. two lines.
  * We solve it using Newont's Method (hence the inheritance of Objective).
@@ -20,9 +20,12 @@ class CapsuleDistanceObjective : public NewtonObjective<12, 2>,
                                  public SensitivityObjective<12, 2> {
 public:
     /**
-     * @copydoc NewtonObjective::compute_O
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
+     * @brief Computes the objective function value of this objective.
+     * 
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     * 
+     * @return The objective function value
      */
     double compute_O(const Vector12d& P, const Vector2d& X) const override {
         double value = 0.0;
@@ -43,12 +46,16 @@ public:
         return value;
     }
 
-    /**
-     * @copydoc NewtonObjective::compute_dOdX
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
-     */
     FD_CHECK_dOdX(2, 2, 12, 0, "CapsuleDistanceObjective - dOdX");
+    /**
+     * @brief Computes the first derivative of the objective value.
+     * 
+     * The derivative is taken with respect to X, the current point on the two lines.
+     * 
+     * @param[out] dOdX The derivative \f$\frac{dO}{dX}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     */
     void compute_dOdX(Vector2d& dOdX, const Vector12d& P,
                       const Vector2d& X) const {
         //--- Shortest distance
@@ -65,12 +72,13 @@ public:
         dOdX[1] += constraintWeight * sulc.compute_dFdX(X[1] - 1.0);
     }
 
-    /**
-     * @copydoc NewtonObjective::compute_d2OdX2
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
-     */
     FD_CHECK_d2OdX2(2, 2, 12, 0, "CapsuleDistanceObjective - d2OdX2");
+    /**
+     * @brief Computes the second derivative of the objective value.
+     * @param[out] d2OdX2 The second derivative \f$\frac{d^2O}{dX^2}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     */
     void compute_d2OdX2(Matrix2d& d2OdX2, const Vector12d& P,
                         const Vector2d& X) const {
         //--- Shortest distance
@@ -87,13 +95,17 @@ public:
         d2OdX2(1, 1) += constraintWeight * sulc.compute_d2FdX2(X[1] - 1.0);
     }
 
-    /**
-     * @copydoc SensitivityObjective::compute_dDdX
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
-     */
     FD_CHECK_dDdX(2, 2, 12, 0, "CapsuleDistanceObjective - dDdX");
-    void compute_dDdX(Vector2d& dOdX, const Vector12d& P,
+    /**
+     * @brief Computes the first derivative of the capsule distance with respect to X.
+     * 
+     * The derivative is taken with respect to X, the current point on the two lines.
+     * 
+     * @param[out] dDdX The derivative \f$\frac{dD}{dX}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     */
+    void compute_dDdX(Vector2d& dDdX, const Vector12d& P,
                       const Vector2d& X) const {
         Vector3d P1 = P.segment(0, 3);
         Vector3d P2 = P.segment(3, 3);
@@ -106,16 +118,21 @@ public:
         double v_norm = v.norm();
         if (v_norm < 1e-8) v_norm = 1e-8;
 
-        dOdX[0] = (P2 - P1).transpose() * (v / v_norm);
-        dOdX[1] = -(P4 - P3).transpose() * (v / v_norm);
+        dDdX[0] = (P2 - P1).transpose() * (v / v_norm);
+        dDdX[1] = -(P4 - P3).transpose() * (v / v_norm);
     }
-    /**
-     * @copydoc SensitivityObjective::compute_d2DdX2
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
-     */
+
     FD_CHECK_d2DdX2(2, 2, 12, 0, "CapsuleDistanceObjective - d2DdX2");
-    void compute_d2DdX2(Matrix2d& d2OdX2, const Vector12d& P,
+    /**
+     * @brief Computes the second derivative of the capsule distance with respect to X.
+     * 
+     * The derivative is taken with respect to X, the current point on the two lines.
+     * 
+     * @param[out] d2DdX2 The derivative \f$\frac{d^2D}{dX^2}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     */
+    void compute_d2DdX2(Matrix2d& d2DdX2, const Vector12d& P,
                         const Vector2d& X) const override {
         Vector3d P1 = P.segment(0, 3);
         Vector3d P2 = P.segment(3, 3);
@@ -127,28 +144,30 @@ public:
         Vector3d v = P12 - P34;
         double v_norm = v.norm();
         if (v_norm < 1e-8) v_norm = 1e-8;
-        d2OdX2(0, 0) = (double)((P2 - P1).transpose() *
+        d2DdX2(0, 0) = (double)((P2 - P1).transpose() *
                                 ((P2 - P1) * v_norm -
                                  (v * (P2 - P1).transpose() * v / v_norm))) /
                        (v_norm * v_norm);
-        d2OdX2(1, 0) = (double)((P4 - P3).transpose() *
+        d2DdX2(1, 0) = (double)((P4 - P3).transpose() *
                                 ((P2 - P1) * v_norm -
                                  (v * (P2 - P1).transpose() * v / v_norm))) /
                        (v_norm * v_norm) * -1.0;
-        d2OdX2(0, 1) = (double)((P2 - P1).transpose() *
+        d2DdX2(0, 1) = (double)((P2 - P1).transpose() *
                                 ((P4 - P3) * v_norm -
                                  (v * (P4 - P3).transpose() * v / v_norm))) /
                        (v_norm * v_norm) * -1.0;
-        d2OdX2(1, 1) = (double)((P4 - P3).transpose() *
+        d2DdX2(1, 1) = (double)((P4 - P3).transpose() *
                                 ((P4 - P3) * v_norm -
                                  (v * (P4 - P3).transpose() * v / v_norm))) /
                        (v_norm * v_norm);
     }
 
     /**
-     * @copydoc SensitivityObjective::compute_D
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
+     * @brief Computes the capsule distance between the two capsules parameterized by P.
+     * 
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     * @return The distance between the two capsules evaluated at X.
      */
     double compute_D(const Vector12d& P, const Vector2d& X) const override {
         Vector3d P12 = P.head(3) + X[0] * (P.segment(3, 3) - P.head(3));
@@ -156,12 +175,14 @@ public:
         return (P12 - P34).norm();
     }
 
-    /**
-     * @copydoc SensitivityObjective::compute_dDdP
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
-     */
     FD_CHECK_dDdP_NON_STATIC(12, 12, 2, 0, "CapsuleDistanceObjective - dDdP");
+    /**
+     * @brief Computes the first derivative of the capsule distance with respect to P.
+     * 
+     * @param[out] dDdP The derivative \f$\frac{dD}{dP}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     */
     void compute_dDdP(Vector12d& dDdP, const Vector12d& P,
                       const Vector2d& X) const override {
         Vector3d P1 = P.segment(0, 3);
@@ -181,13 +202,14 @@ public:
         dDdP.segment(9, 3) = -X[1] * (v / v_norm);
     }
 
+    FD_CHECK_d2DdP2_NON_STATIC(12, 12, 2, 0, "CapsuleDistanceObjective - d2DdP2");
     /**
-     * @copydoc SensitivityObjective::compute_d2DdP2
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
+     * @brief Computes the second derivative of the capsule distance with respect to P.
+     * 
+     * @param[out] d2DdP2 The derivative \f$\frac{d^2D}{dP^2}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
      */
-    FD_CHECK_d2DdP2_NON_STATIC(12, 12, 2, 0,
-                               "CapsuleDistanceObjective - d2DdP2");
     void compute_d2DdP2(Matrix12d& d2DdP2, const Vector12d& P,
                         const Vector2d& X) const override {
         const double t12 = X[0];
@@ -288,12 +310,14 @@ public:
         }
     }
 
-    /**
-     * @copydoc SensitivityObjective::compute_d2DdXdP
-     * @param P The four points, stacked.
-     * @param X The current point on the two lines.
-     */
     FD_CHECK_d2DdXdP(12, 12, 2, 0, "CapsuleDistanceObjective - d2DdXdP");
+    /**
+     * @brief Computes the mixed derivative of the capsule distance with respect to X and P.
+     * 
+     * @param[out] d2DdXdP The derivative \f$\frac{d^D}{dXdP}\f$.
+     * @param[in] P The four points (start and end of the first capsule, then start and end position of the second capsule), stacked.
+     * @param[in] X The current point on the two lines.
+     */
     void compute_d2DdXdP(Eigen::Matrix<double, 2, 12>& d2DdXdP,
                          const Vector12d& P, const Vector2d& X) const override {
         Vector3d P1 = P.segment(0, 3);
@@ -379,4 +403,4 @@ private:
 };
 
 }  // namespace DCA
-#endif /* __DCA__CAPSULEDISTANCEOBJECTIVE_H__ */
+#endif /* __DCA_CAPSULEDISTANCEOBJECTIVE_H__ */
