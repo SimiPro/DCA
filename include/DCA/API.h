@@ -33,95 +33,257 @@ namespace DCA {
 
 class API {
 public:
-    /** Sphere vs. Sphere **/
+    /**
+     * @defgroup SphereVsSphere
+     * @brief API for %Sphere vs. %Sphere interactions.
+     * 
+     * This module contains all helpers for %Sphere vs. %Sphere interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between two spheres.
+     * 
+     * @param s_a The first sphere
+     * @param s_b The second sphere
+     * @return The distance between both spheres.
+     */
     static double compute_D(const Sphere& s_a, const Sphere& s_b) {
         READ_SPHERE_SPHERE_DATA(s_a, s_b);
         return SphereVsSphere::compute_D(P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* derivative of the distance between both spheres.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of both spheres (both positions, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both spheres.
+     * @param s_a The first sphere
+     * @param s_b The second sphere
+     */
     static void compute_dDdP(Vector6d& dDdP, const Sphere& s_a,
                              const Sphere& s_b) {
         READ_SPHERE_SPHERE_DATA(s_a, s_b);
         SphereVsSphere::compute_dDdP(dDdP, P, props);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* derivative of the distance between both spheres.
+     * 
+     * The derivative is of size 3,
+     * meaning it is taken with respect to the parameters of the first sphere (namely the position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the first sphere.
+     * @param s_a The first sphere
+     * @param s_b The second sphere
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the first sphere.
+     */
     static void compute_dDdP(Vector3d& dDdP, const Sphere& s_a,
                              const Sphere& s_b) {
         READ_SPHERE_SPHERE_DATA(s_a, s_b);
         SphereVsSphere::compute_dDdP(dDdP, P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* second derivative of the distance between both spheres.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of both spheres (both positions, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for both spheres.
+     * @param s_a The first sphere
+     * @param s_b The second sphere
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Sphere& s_a,
                                const Sphere& s_b) {
         READ_SPHERE_SPHERE_DATA(s_a, s_b);
         SphereVsSphere::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* second derivative of the distance between both spheres.
+     * 
+     * The derivative is of size 3 by 3,
+     * meaning it is taken with respect to the parameters of the first sphere (namely the position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the first sphere.
+     * @param s_a The first sphere
+     * @param s_b The second sphere
+     * 
+     * @attention This is not the *full* derivative, only the block belonging to the first sphere.
+     */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Sphere& s_a,
                                const Sphere& s_b) {
         READ_SPHERE_SPHERE_DATA(s_a, s_b);
         SphereVsSphere::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    /** Sphere vs. Capsule **/
+    /**
+     * @}
+     */ // end of group SphereVsSphere
+
+    /**
+     * @defgroup SphereVsCapsule
+     * @brief API for %Sphere vs. %Capsule interactions.
+     * 
+     * This module contains all helpers for %Sphere vs. %Capsule interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between a sphere and a capsule.
+     * 
+     * @param s_a The sphere
+     * @param c_b The capsule
+     * @return The distance between both primitives.
+     */
     static double compute_D(const Sphere& s_a, const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         return SphereVsCapsule::compute_D(P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* derivative of the distance between a sphere and a capsule.
+     * 
+     * The derivative is size 9,
+     * meaning it is taken with respect to the parameters of both primitives (both positions, a total of 9 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param s_a The sphere
+     * @param c_b The capsule
+     */
     static void compute_dDdP(Vector9d& dDdP, const Sphere& s_a,
                              const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         SphereVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* derivative of the distance between a sphere and a capsule.
+     * 
+     * The derivative is of size 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the sphere.
+     * @param s_a The sphere
+     * @param c_b The capsule
+     * 
+     * @attention This is not the *full* derivative, only the segment which belongs to the sphere.
+     */
     static void compute_dDdP(Vector3d& dDdP, const Sphere& s_a,
                              const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         SphereVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // to the second primitive
+    /**
+     * @brief Computes the *partial* derivative of the distance between a sphere and a capsule.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the capsule (start- and end-position, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the capsule.
+     * @param s_a The sphere
+     * @param c_b The capsule
+     * 
+     * @attention This is not the *full* derivative, only the segment which belongs to the capsule.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Sphere& s_a,
                              const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         SphereVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* second derivative of the distance between a sphere and a capsule.
+     * 
+     * The derivative is size 9 by 9,
+     * meaning it is taken with respect to the parameters of both primitives (all positions, a total of 9 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP2} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param s_a The sphere
+     * @param c_b The capsule
+     */
     static void compute_d2DdP2(Matrix9d& d2DdP2, const Sphere& s_a,
                                const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a sphere and a capsule.
+     * 
+     * The derivative is of size 3 by 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the sphere.
+     * @param s_a The sphere
+     * @param c_b The capsule
+     * 
+     * @attention This is not the *full* derivative, only the block which belongs to the sphere.
+     */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Sphere& s_a,
                                const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    // to the second primitive
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a sphere and a capsule.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the capsule (start- and end-position, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The first derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the capsule.
+     * @param s_a The sphere
+     * @param c_b The capsule
+     * 
+     * @attention This is not the *full* second derivative, only the block which belongs to the capsule.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Sphere& s_a,
                                const Capsule& c_b) {
         READ_SPHERE_CAPSULE_DATA(s_a, c_b);
         SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    /** Capsule vs. Sphere **/
+    /**
+     * @}
+     */ // end of group SphereVsCapsule
+
+
+    /**
+     * @defgroup CapsuleVsSphere
+     * @brief API for %Capsule vs. %Sphere interactions.
+     * 
+     * This module contains all helpers for %Capsule vs. %Sphere interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between a capsule and a sphere.
+     * 
+     * @param c_a The capsule
+     * @param s_b The sphere
+     * @return The distance between both primitives.
+     */
     static double compute_D(const Capsule& c_a, const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
         return SphereVsCapsule::compute_D(P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* derivative of the distance between a capsule and a sphere.
+     * 
+     * The derivative is size 9 by 9,
+     * meaning it is taken with respect to the parameters of both primitives (all positions, a total of 9 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param c_a The capsule
+     * @param s_b The sphere
+     */
     static void compute_dDdP(Vector9d& dDdP, const Capsule& c_a,
                              const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
@@ -131,21 +293,52 @@ public:
         dDdP.tail(3) = dDdP_flip.head(3);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* derivative of the distance between a capsule and a sphere.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the capsule (start- and end-position, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the capsule.
+     * @param c_a The capsule
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the segment which belongs to the capsule.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Capsule& c_a,
                              const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
         SphereVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // to the second primitive
+    /**
+     * @brief Computes the *partial* derivative of the distance between a capsule and a sphere.
+     * 
+     * The derivative is of size 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the sphere.
+     * @param c_a The capsule
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the segment which belongs to the sphere.
+     */
     static void compute_dDdP(Vector3d& dDdP, const Capsule& c_a,
                              const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
         SphereVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* second derivative of the distance between a capsule and a sphere.
+     * 
+     * The derivative is of size 9 by 9,
+     * meaning it is taken with respect to the parameters of both primitives (all positions, a total of 9 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP2} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param c_a The capsule
+     * @param s_b The sphere
+     */
     static void compute_d2DdP2(Matrix9d& d2DdP2, const Capsule& c_a,
                                const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
@@ -158,55 +351,145 @@ public:
         d2DdP2.block(6, 0, 3, 6) = d2DdP2_flip.block(0, 3, 3, 6);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a capsule and a sphere.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the capsule (start- and end-position, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The first derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the capsule.
+     * @param c_a The capsule
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* second derivative, only the block which belongs to the capsule.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Capsule& c_a,
                                const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
         SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    // to the second primitive
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a capsule and a sphere.
+     * 
+     * The derivative is of size 3 by 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the sphere.
+     * @param c_a The capsule
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the block which belongs to the sphere.
+     */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Capsule& c_a,
                                const Sphere& s_b) {
         READ_SPHERE_CAPSULE_DATA(s_b, c_a);
         SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    /** Capsule vs. Capsule **/
+    /**
+     * @}
+     */ // end of group CapsuleVsSphere
+
+    /**
+     * @defgroup CapsuleVsCapsule
+     * @brief API for %Capsule vs. %Capsule interactions.
+     * 
+     * This module contains all helpers for %Capsule vs. %Capsule interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between two capsules.
+     * 
+     * @param c_a The first capsule
+     * @param c_b The second capsule
+     * @return The distance between both primitives.
+     */
     static double compute_D(const Capsule& c_a, const Capsule& c_b) {
         READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
         return CapsuleVsCapsule::compute_D(P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* derivative of the distance between both capsules.
+     * 
+     * The derivative is of size 12,
+     * meaning it is taken with respect to the parameters of both capsule (both start- and end-positions, a total of 12 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both capsules.
+     * @param c_a The first capsule
+     * @param c_b The second capsule
+     */
     static void compute_dDdP(Vector12d& dDdP, const Capsule& c_a,
                              const Capsule& c_b) {
         READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
         CapsuleVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* derivative of the distance between both capsules.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the first capsule (namely both start- and end-positions, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the first capsule.
+     * @param c_a The first capsule
+     * @param c_b The second capsule
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the first capsule.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Capsule& c_a,
                              const Capsule& c_b) {
         READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
         CapsuleVsCapsule::compute_dDdP(dDdP, P, props);
     }
 
-    // full
+    /**
+     * @brief Computes the *full* second derivative of the distance between both capsules.
+     * 
+     * The derivative is of size 12 by 12,
+     * meaning it is taken with respect to the parameters of both capsules (both positions, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for both capsules.
+     * @param c_a The first capsule
+     * @param c_b The second capsule
+     */
     static void compute_d2DdP2(Matrix12d& d2DdP2, const Capsule& c_a,
                                const Capsule& c_b) {
         READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
         CapsuleVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    // to the first primitive
+    /**
+     * @brief Computes the *partial* second derivative of the distance between both capsules.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the first capsule (namely both start- and end-positions, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the first capsule.
+     * @param c_a The first capsule
+     * @param c_b The second capsule
+     * 
+     * @attention This is not the *full* derivative, only the block belonging to the first capsule.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Capsule& c_a,
                                const Capsule& c_b) {
         READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
         CapsuleVsCapsule::compute_d2DdP2(d2DdP2, P, props);
     }
 
-    /** GENERIC HELPERS **/
+    /**
+     * @}
+     */ // end of group CapsuleVsCapsule
+
+    /**
+     * @brief Compute the distance for a given pair.
+     * 
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
+     * @return The distance between both primitives.
+     */
     static double compute_D(const primitive_t& p_a, const primitive_t& p_b) {
         return std::visit(
             overloaded{[&](const Sphere& s_a, const Sphere& s_b) {
@@ -224,7 +507,13 @@ public:
             p_a, p_b);
     }
 
-    // return full gradient based on these primitives
+    /**
+     * @brief Computes the *full* derivative of the distance for a given pair.
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
+     */
     static void compute_dDdP(VectorXd& dDdP, const primitive_t& p_a,
                              const primitive_t& p_b) {
         std::visit(overloaded{[&](const Sphere& s_a, const Sphere& s_b) {
@@ -250,7 +539,13 @@ public:
                    p_a, p_b);
     }
 
-    // return full hessian based on these primitives
+    /**
+     * @brief Computes the *full* second derivative of the distance for a given pair.
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
+     */
     static void compute_d2DdP2(MatrixXd& d2DdP2, const primitive_t& p_a,
                                const primitive_t& p_b) {
         std::visit(overloaded{[&](const Sphere& s_a, const Sphere& s_b) {
@@ -276,20 +571,38 @@ public:
                    p_a, p_b);
     }
 
-    /** Helpers for Pair **/
+    /**
+     * @brief Compute the distance for a given pair.
+     *  
+     * @param[in] pair A pair of indices.
+     * @param[in] primitives A vector of primitives, where the indices from the pair should apply to.
+     * @return The distance between both primitives.
+     */
     static double compute_D(const pair_t& pair,
                             const std::vector<primitive_t>& primitives) {
         return compute_D(primitives.at(pair.first), primitives.at(pair.second));
     }
 
-    // computes full derivative
+    /**
+     * @brief Computes the *full* derivative of the distance for a given pair.
+     *
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param[in] pair A pair of indices.
+     * @param[in] primitives A vector of primitives, where the indices from the pair should apply to.
+     */
     static void compute_dDdP(VectorXd& dDdP, const pair_t& pair,
                              const std::vector<primitive_t>& primitives) {
         compute_dDdP(dDdP, primitives.at(pair.first),
                      primitives.at(pair.second));
     }
 
-    // computes full derivative
+    /**
+     * @brief Computes the *full* second derivative of the distance for a given pair.
+     *
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for both primitives.
+     * @param[in] pair A pair of indices.
+     * @param[in] primitives A vector of primitives, where the indices from the pair should apply to.
+     */
     static void compute_d2DdP2(MatrixXd& d2DdP2, const pair_t& pair,
                                const std::vector<primitive_t>& primitives) {
         compute_d2DdP2(d2DdP2, primitives.at(pair.first),

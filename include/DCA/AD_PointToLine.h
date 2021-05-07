@@ -3,6 +3,8 @@
 
 #include <Eigen/Core>
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 namespace PointToLineSegmentDistance_CodeGen {
 inline void AD_PointToLineSegmentDistance(const Eigen::Matrix<double, 9, 1>& x_e,
                                    double sigScale, double& objVal) {
@@ -1430,4 +1432,5 @@ inline void AD_PointToLineSegmentDistanceHessian(
 
 }  // namespace PointToLineSegmentDistance_CodeGen
 
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 #endif /* __DCA_AD_POINTTOLINESEGMENT_DISTANCE_H__ */
