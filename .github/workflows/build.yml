@@ -16,3 +16,4 @@ jobs:
       uses: nicledomaS/cmake_build_action@v1.4
       with:
         config: ${{ matrix.configs }}
+        cmake_args: -DDCA_BUILD_DEV_TOOLS=ON

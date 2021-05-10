@@ -1,38 +1,21 @@
-/**
- * This file manages all pairs of collisions.
- * This means, it performs various approaches
- * for a broad collision detection.
- * 
- * @author Matthias Busenhart, Simon Zimmermann, Simon Huber, Stelian Coros
- * CRL Group, ETH Zurich, crl.ethz.ch
- * (c) 2021
- */
-
 #ifndef __DCA_PAIR_H__
 #define __DCA_PAIR_H__
 
 #include "primitives.h"
 #include "utils.h"
 
-#if BUILD_COMPACT_N_SEARCH
-
-#include <CompactNSearch>
-#include <array>  // for windows
-#include <exception>
-
-#endif /* BUILD_COMPACT_N_SEARCH */
-
 namespace DCA {
 /**
- * This is the base class for all generators.
+ * @brief This is the base class for all generators.
  */
 class PairGenerator {
 public:
     /**
-     * This function generates the pairs given the primitives.
+     * @brief This function generates the pairs given the primitives.
+     * 
      * The returned vector consists of pairs, where each pair holds two numbers:
      * The indices of the corresponding primitives which were given.
-     * @param primitives All primitives to generate the pairs from.
+     * @param[in] primitives All primitives to generate the pairs from.
      * @return A vector of pairs of indices, where each index corresponds to a primitive in the primitives vector.
      */
     virtual std::vector<pair_t> generate(
@@ -40,8 +23,9 @@ public:
 };
 
 /**
- * This generator creates all possible permutations of pairs.
- * This means, the amount of pairs created is n^2, where n = #primitives.
+ * @brief This generator creates all possible permutations of pairs.
+ * This means, the amount of pairs created is \f$n^2/2\f$, where n is the number of primitives.
+ * Pairs are not returned twice (0, 1) and (1, 0).
  */
 class PermutationPairGenerator : public PairGenerator {
 public:
@@ -55,9 +39,8 @@ public:
         ret.reserve(primitives.size() * primitives.size() - primitives.size());
 
         for (size_t i = 0; i < primitives.size(); i++) {
-            for (size_t j = 0; j < primitives.size(); j++) {
+            for (size_t j = i + 1; j < primitives.size(); j++) {
                 // skip primitve self-collision
-                if (i == j) continue;
                 ret.push_back({i, j});
             }
         }
@@ -66,20 +49,18 @@ public:
     }
 };
 
-#if BUILD_COMPACT_N_SEARCH
 /**
- * This generator uses the CompactNSearch library 
- * for efficient neighbor searching.
- * Altough the neighborhood is computed new for each call to generate,
- * it serves as a first usefull implementation
+ * This generator computes the pairs which are in a certain threshold from each other.
+ * It does so by computing a single position for each primitive and selecting
+ * pairs based on the distance.
  */
 class NeighborsPairGenerator : public PairGenerator {
 public:
     /**
-     * Construct this generator with a given radius
-     * @param radius The radius to search other primitives in.
+     * @brief Construct this generator with a given radius
+     * @param[in] radius The radius to search other primitives in.
      */
-    NeighborsPairGenerator(const double &radius) : m_radius(radius) {}
+    NeighborsPairGenerator(const double &radius) : m_radius2(radius * radius) {}
 
     /**
      * @copydoc PairGenerator::generate
@@ -88,16 +69,14 @@ public:
         const std::vector<primitive_t> &primitives) const override {
         std::vector<pair_t> ret;
 
-        std::vector<std::array<double, 3>> positions;
-        positions.resize(primitives.size());
-        // Create the position vector
+        std::vector<Vector3d> positions(primitives.size());
 
         for (size_t i = 0; i < primitives.size(); i++) {
             Vector3d pos = std::visit(
-                overloaded{[](const Sphere &cp) { return cp.getPosition(); },
+                overloaded{[](const Sphere &cp) { return cp.position; },
                            [](const Capsule &cp) {
-                               return Vector3d(0.5 * (cp.getStartPosition() +
-                                                      cp.getEndPosition()));
+                               return Vector3d(
+                                   0.5 * (cp.startPosition + cp.endPosition));
                            },
                            [](const primitive_t &cp) {
                                throw std::logic_error(
@@ -109,21 +88,13 @@ public:
             positions[i] = {pos.x(), pos.y(), pos.z()};
         }
 
-        CompactNSearch::NeighborhoodSearch nsearch(m_radius);
-        unsigned id =
-            nsearch.add_point_set(positions.front().data(), positions.size());
-
-        // Actually perform the computation
-        nsearch.find_neighbors();
-
-        // Now get all neighbors and add them to the pairs list
-        CompactNSearch::PointSet const &ps = nsearch.point_set(id);
-        for (int i = 0; i < ps.n_points(); i++) {
-            for (size_t j = 0; j < ps.n_neighbors(id, i); j++) {
-                // return point id of the j-th neighbor of the i-th particle in the point set
-                const unsigned pid = ps.neighbor(id, i, j);
-
-                ret.push_back({i, pid});
+        // now search all pairs where they are in a certain distance
+        for (size_t i = 0; i < primitives.size(); i++) {
+            for (size_t j = i + 1; j < primitives.size(); j++) {
+                // skip primitve self-collision
+                if ((positions[i] - positions[j]).squaredNorm() < m_radius2) {
+                    ret.push_back({i, j});
+                }
             }
         }
 
@@ -131,9 +102,8 @@ public:
     }
 
 private:
-    double m_radius;
+    double m_radius2; ///< The squared radius
 };
-#endif /* BUILD_COMPACT_N_SEARCH */
 
 }  // namespace DCA
 #endif /* __DCA_PAIR_H__ */
