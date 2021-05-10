@@ -12,6 +12,7 @@ namespace DCA {
  */
 template <int SizeP, int SizeX>
 class SensitivityObjective {
+public:
     using P_v = Eigen::Matrix<double, SizeP, 1>;      ///< Helper: P Vector
     using X_v = Eigen::Matrix<double, SizeX, 1>;      ///< Helper: X Vector
     using X_m = Eigen::Matrix<double, SizeX, SizeX>;  ///< Helper: X Matrix
