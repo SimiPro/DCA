@@ -46,7 +46,9 @@ public:
         return value;
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_dOdX(2, 2, 12, 0, "CapsuleDistanceObjective - dOdX");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the first derivative of the objective value.
      * 
@@ -72,7 +74,9 @@ public:
         dOdX[1] += constraintWeight * sulc.compute_dFdX(X[1] - 1.0);
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_d2OdX2(2, 2, 12, 0, "CapsuleDistanceObjective - d2OdX2");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the second derivative of the objective value.
      * @param[out] d2OdX2 The second derivative \f$\frac{d^2O}{dX^2}\f$.
@@ -95,7 +99,9 @@ public:
         d2OdX2(1, 1) += constraintWeight * sulc.compute_d2FdX2(X[1] - 1.0);
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_dDdX(2, 2, 12, 0, "CapsuleDistanceObjective - dDdX");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the first derivative of the capsule distance with respect to X.
      * 
@@ -122,7 +128,9 @@ public:
         dDdX[1] = -(P4 - P3).transpose() * (v / v_norm);
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_d2DdX2(2, 2, 12, 0, "CapsuleDistanceObjective - d2DdX2");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the second derivative of the capsule distance with respect to X.
      * 
@@ -175,7 +183,9 @@ public:
         return (P12 - P34).norm();
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_dDdP_NON_STATIC(12, 12, 2, 0, "CapsuleDistanceObjective - dDdP");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the first derivative of the capsule distance with respect to P.
      * 
@@ -202,7 +212,9 @@ public:
         dDdP.segment(9, 3) = -X[1] * (v / v_norm);
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_d2DdP2_NON_STATIC(12, 12, 2, 0, "CapsuleDistanceObjective - d2DdP2");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the second derivative of the capsule distance with respect to P.
      * 
@@ -310,7 +322,9 @@ public:
         }
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_d2DdXdP(12, 12, 2, 0, "CapsuleDistanceObjective - d2DdXdP");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Computes the mixed derivative of the capsule distance with respect to X and P.
      * 

@@ -31,6 +31,11 @@ namespace DCA {
     Vector12d P;                            \
     P << c_a.startPosition, c_a.endPosition, c_b.startPosition, c_b.endPosition;
 
+/**
+ * @brief Public %API.
+ * 
+ * This is the main public %API which should be used.
+ */
 class API {
 public:
     /**

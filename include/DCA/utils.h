@@ -6,39 +6,25 @@
 
 namespace DCA {
 
-// Easier access to a 2 vector.
-using Eigen::Vector2d;
-// Easier access to a 2 by 2 matrix.
-using Eigen::Matrix2d;
+using Eigen::Vector2d; ///< Easier access to a 2 vector.
+using Eigen::Matrix2d; ///< Easier access to a 2 by 2 matrix.
 
-// Easier access to a 3 vector.
-using Eigen::Vector3d;
-// Easier access to a 3 by 3 matrix.
-using Eigen::Matrix3d;
+using Eigen::Vector3d; ///< Easier access to a 3 vector.
+using Eigen::Matrix3d; ///< Easier access to a 3 by 3 matrix.
 
-// Easier access to a 6 vector.
-using Vector6d = Eigen::Matrix<double, 6, 1>;
-// Easier access to a 6 by 6 matrix.
-using Matrix6d = Eigen::Matrix<double, 6, 6>;
+using Vector6d = Eigen::Matrix<double, 6, 1>; ///< Easier access to a 6 vector.
+using Matrix6d = Eigen::Matrix<double, 6, 6>; ///< Easier access to a 6 by 6 matrix.
 
-// Easier access to a 9 vector.
-using Vector9d = Eigen::Matrix<double, 9, 1>;
-// Easier access to a 9 by 9 matrix.
-using Matrix9d = Eigen::Matrix<double, 9, 9>;
+using Vector9d = Eigen::Matrix<double, 9, 1>; ///< Easier access to a 9 vector.
+using Matrix9d = Eigen::Matrix<double, 9, 9>; ///< Easier access to a 9 by 9 matrix.
 
-// Easier access to a 12 vector.
-using Vector12d = Eigen::Matrix<double, 12, 1>;
-// Easier access to a 12 by 12 matrix.
-using Matrix12d = Eigen::Matrix<double, 12, 12>;
+using Vector12d = Eigen::Matrix<double, 12, 1>; ///< Easier access to a 12 vector.
+using Matrix12d = Eigen::Matrix<double, 12, 12>; ///< Easier access to a 12 by 12 matrix.
 
+using Eigen::VectorXd; ///< Easier access to any dynamic vector
+using Eigen::MatrixXd; ///< Easier access to any dynamic matrix
 
-// Easier access to any dynamic vector
-using Eigen::VectorXd;
-// Easier access to any dynamic matrix
-using Eigen::MatrixXd;
-
-// Easier access to a pair (corresponding of two indices)
-using pair_t = std::pair<size_t, size_t>;
+using pair_t = std::pair<size_t, size_t>; ///< Easier access to a pair (corresponding of two indices)
 
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 

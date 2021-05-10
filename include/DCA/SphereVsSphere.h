@@ -21,7 +21,9 @@ public:
         return (P.head(3) - P.tail(3)).norm() - props.sum();
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_dDdP(6, 6, 2, 0, "SphereVsSphere - dDdP_6");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Compute the *full* derivative of the distance of two spheres with respect to P.
      * @param[out] dDdP The *full* derivative \f$\frac{dD}{dP}\f$.
@@ -37,7 +39,9 @@ public:
         dDdP.tail(3) = -dDdP1;
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_dDdP(3, 6, 2, 0, "SphereVsSphere - dDdP_3");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Compute the *partial* derivative of the distance of two spheres with respect to P.
      * @param[out] dDdP The *partial* derivative \f$\frac{dD}{dP}\f$, that is with respect to the parameters of the first sphere.
@@ -56,7 +60,9 @@ public:
         dDdP = v / v_norm;
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_d2DdP2(6, 6, 2, 0, "SphereVsSphere - d2DdP2_6");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Compute the *full* second derivative of the distance of two spheres with respect to P.
      * @param[out] d2DdP2 The *full* second derivative \f$\frac{d^2D}{dP^2}\f$.
@@ -73,7 +79,9 @@ public:
         d2DdP2.block(3, 3, 3, 3) = d2DdP2_1;
     }
 
+    #ifndef DOXYGEN_SHOULD_SKIP_THIS
     FD_CHECK_d2DdP2(3, 6, 2, 0, "SphereVsSphere - d2DdP2_3");
+    #endif /* DOXYGEN_SHOULD_SKIP_THIS */
     /**
      * @brief Compute the *partial* second derivative of the distance of two spheres with respect to P.
      * @param[out] d2DdP2 The *partial* derivative \f$\frac{d^2D}{dP^2}\f$, that is with respect to the parameters of the first sphere.
