@@ -4,6 +4,7 @@
 #define RUN_FD_CHECK
 
 #include <DCA/CapsuleVsCapsule.h>
+#include <DCA/Plane.h>
 #include <DCA/SphereVsCapsule.h>
 #include <DCA/SphereVsSphere.h>
 
@@ -47,6 +48,26 @@ int main(int argc, char const *argv[]) {
     CapsuleVsCapsule::check_d2DdP2_12(P12, props);
 
     CapsuleVsCapsule::check_dXdP_12(P12, X);
+
+    // Plane checks
+    DCA::Vector1d props1;
+    props1 << props(0);
+    PlaneVsSphere::check_dDdP_3(P9, props1);
+    PlaneVsSphere::check_d2DdP2_3(P9, props1);
+    PlaneVsSphere::check_dDdP_6(P9, props1);
+    PlaneVsSphere::check_d2DdP2_6(P9, props1);
+    PlaneVsSphere::check_dDdP_9(P9, props1);
+    PlaneVsSphere::check_d2DdP2_9(P9, props1);
+
+    PlaneVsCapsule::check_dDdP_6(P12, props1);
+    PlaneVsCapsule::check_d2DdP2_6(P12, props1);
+    PlaneVsCapsule::check_dDdP_12(P12, props1);
+    PlaneVsCapsule::check_d2DdP2_12(P12, props1);
+    DCA::Vector0d props0;
+    PlaneVsPlane::check_dDdP_6(P12, props0);
+    PlaneVsPlane::check_d2DdP2_6(P12, props0);
+    PlaneVsPlane::check_dDdP_12(P12, props0);
+    PlaneVsPlane::check_d2DdP2_12(P12, props0);
 
     // Checking CapsuleDistanceObjective
     obj.check_dOdX_2(X, P12);

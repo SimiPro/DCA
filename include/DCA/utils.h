@@ -6,6 +6,9 @@
 
 namespace DCA {
 
+using Vector0d = Eigen::Matrix<double, 0, 1>; ///< Easier access to a 0 vector.
+using Vector1d = Eigen::Matrix<double, 1, 1>; ///< Easier access to a 1 vector.
+
 using Eigen::Vector2d; ///< Easier access to a 2 vector.
 using Eigen::Matrix2d; ///< Easier access to a 2 by 2 matrix.
 
