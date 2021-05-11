@@ -2,7 +2,7 @@
 #include <Eigen/Core>
 
 namespace PlaneToSphereDistance_CodeGen {
-void AD_PlaneToSphereDistance(const Eigen::Matrix<double, 9, 1>& P,
+inline void AD_PlaneToSphereDistance(const Eigen::Matrix<double, 9, 1>& P,
                               const Eigen::Matrix<double, 1, 1>& props,
                               double& objVal) {
     double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6,
@@ -36,7 +36,7 @@ void AD_PlaneToSphereDistance(const Eigen::Matrix<double, 9, 1>& P,
     _i_var23 = (_i_var22) - (props(0, 0));
     objVal = _i_var23;
 }
-void AD_PlaneToSphereDistanceGradient(const Eigen::Matrix<double, 9, 1>& P,
+inline void AD_PlaneToSphereDistanceGradient(const Eigen::Matrix<double, 9, 1>& P,
                                       const Eigen::Matrix<double, 1, 1>& props,
                                       Eigen::Matrix<double, 9, 1>& gradient) {
     double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6,
@@ -125,7 +125,7 @@ void AD_PlaneToSphereDistanceGradient(const Eigen::Matrix<double, 9, 1>& P,
     gradient(7, 0) = _i_var61;
     gradient(8, 0) = _i_var62;
 }
-void AD_PlaneToSphereDistanceHessian(const Eigen::Matrix<double, 9, 1>& P,
+inline void AD_PlaneToSphereDistanceHessian(const Eigen::Matrix<double, 9, 1>& P,
                                      const Eigen::Matrix<double, 1, 1>& props,
                                      Eigen::Matrix<double, 9, 9>& hessian) {
     double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6,

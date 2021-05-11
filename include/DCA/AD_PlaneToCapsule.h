@@ -3,7 +3,7 @@
 #include <Eigen/Core>
 
 namespace PlaneToCapsuleDistance_CodeGen { 
-void AD_PlaneToCapsuleDistance(const Eigen::Matrix<double,12,1> & P, const Eigen::Matrix<double,1,1> & props, double curveScale, double sigScale, double& objVal){
+inline void AD_PlaneToCapsuleDistance(const Eigen::Matrix<double,12,1> & P, const Eigen::Matrix<double,1,1> & props, double curveScale, double sigScale, double& objVal){
 	double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6, _i_var7, _i_var8, _i_var9, _i_var10, _i_var11, _i_var12, _i_var13, _i_var14;
 	double _i_var15, _i_var16, _i_var17, _i_var18, _i_var19, _i_var20, _i_var21, _i_var22, _i_var23, _i_var24, _i_var25, _i_var26, _i_var27, _i_var28, _i_var29;
 	double _i_var30, _i_var31, _i_var32, _i_var33, _i_var34, _i_var35, _i_var36, _i_var37, _i_var38, _i_var39, _i_var40, _i_var41, _i_var42, _i_var43, _i_var44;
@@ -116,7 +116,7 @@ void AD_PlaneToCapsuleDistance(const Eigen::Matrix<double,12,1> & P, const Eigen
 	_i_var102 = (_i_var101)-(props(0,0));
 	objVal = _i_var102;
 }
-void AD_PlaneToCapsuleDistanceGradient(const Eigen::Matrix<double,12,1> & P, const Eigen::Matrix<double,1,1> & props, double curveScale, double sigScale, Eigen::Matrix<double, 12, 1>& gradient){
+inline void AD_PlaneToCapsuleDistanceGradient(const Eigen::Matrix<double,12,1> & P, const Eigen::Matrix<double,1,1> & props, double curveScale, double sigScale, Eigen::Matrix<double, 12, 1>& gradient){
 	double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6, _i_var7, _i_var8, _i_var9, _i_var10, _i_var11, _i_var12, _i_var13, _i_var14;
 	double _i_var15, _i_var16, _i_var17, _i_var18, _i_var19, _i_var20, _i_var21, _i_var22, _i_var23, _i_var24, _i_var25, _i_var26, _i_var27, _i_var28, _i_var29;
 	double _i_var30, _i_var31, _i_var32, _i_var33, _i_var34, _i_var35, _i_var36, _i_var37, _i_var38, _i_var39, _i_var40, _i_var41, _i_var42, _i_var43, _i_var44;
@@ -443,7 +443,7 @@ void AD_PlaneToCapsuleDistanceGradient(const Eigen::Matrix<double,12,1> & P, con
 	gradient(10,0) = _i_var291;
 	gradient(11,0) = _i_var292;
 }
-void AD_PlaneToCapsuleDistanceHessian(const Eigen::Matrix<double,12,1> & P, const Eigen::Matrix<double,1,1> & props, double curveScale, double sigScale, Eigen::Matrix<double, 12, 12>& hessian){
+inline void AD_PlaneToCapsuleDistanceHessian(const Eigen::Matrix<double,12,1> & P, const Eigen::Matrix<double,1,1> & props, double curveScale, double sigScale, Eigen::Matrix<double, 12, 12>& hessian){
 	double _i_var0, _i_var1, _i_var2, _i_var3, _i_var4, _i_var5, _i_var6, _i_var7, _i_var8, _i_var9, _i_var10, _i_var11, _i_var12, _i_var13, _i_var14;
 	double _i_var15, _i_var16, _i_var17, _i_var18, _i_var19, _i_var20, _i_var21, _i_var22, _i_var23, _i_var24, _i_var25, _i_var26, _i_var27, _i_var28, _i_var29;
 	double _i_var30, _i_var31, _i_var32, _i_var33, _i_var34, _i_var35, _i_var36, _i_var37, _i_var38, _i_var39, _i_var40, _i_var41, _i_var42, _i_var43, _i_var44;
