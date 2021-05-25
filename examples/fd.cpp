@@ -3,10 +3,12 @@
 // and set solver residuals.
 #define RUN_FD_CHECK
 
-#include <DCA/CapsuleVsCapsule.h>
-#include <DCA/Plane.h>
-#include <DCA/SphereVsCapsule.h>
-#include <DCA/SphereVsSphere.h>
+#include <DCA/Interactions/CapsuleVsCapsule.h>
+#include <DCA/Interactions/PlaneVsCapsule.h>
+#include <DCA/Interactions/PlaneVsPlane.h>
+#include <DCA/Interactions/PlaneVsSphere.h>
+#include <DCA/Interactions/SphereVsCapsule.h>
+#include <DCA/Interactions/SphereVsSphere.h>
 
 int main(int argc, char const *argv[]) {
     using namespace DCA;

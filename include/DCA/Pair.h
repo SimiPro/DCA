@@ -1,8 +1,8 @@
 #ifndef __DCA_PAIR_H__
 #define __DCA_PAIR_H__
 
-#include "primitives.h"
-#include "utils.h"
+#include <DCA/Utils/Primitives.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 /**

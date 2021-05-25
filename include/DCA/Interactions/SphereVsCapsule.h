@@ -1,9 +1,9 @@
 #ifndef __DCA_SPHEREVSCAPSULE_H__
 #define __DCA_SPHEREVSCAPSULE_H__
 
-#include "AD_PointToLine.h"
-#include "FD.h"
-#include "utils.h"
+#include <DCA/Autodiff/AD_PointToLine.h>
+#include <DCA/Utils/FD.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 

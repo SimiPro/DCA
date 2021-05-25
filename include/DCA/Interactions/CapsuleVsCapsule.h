@@ -1,11 +1,11 @@
 #ifndef __DCA__CAPSULEVSCAPSULE_H__
 #define __DCA__CAPSULEVSCAPSULE_H__
 
-#include "AD_PointToLine.h"
-#include "CapsuleDistanceObjective.h"
-#include "FD.h"
-#include "Newton.h"
-#include "utils.h"
+#include <DCA/Autodiff/AD_PointToLine.h>
+#include <DCA/Interactions/CapsuleDistanceObjective.h>
+#include <DCA/Utils/FD.h>
+#include <DCA/Utils/Newton.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 

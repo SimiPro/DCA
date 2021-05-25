@@ -1,13 +1,15 @@
 #ifndef __DCA_API_H__
 #define __DCA_API_H__
 
-#include "CapsuleVsCapsule.h"
-#include "Plane.h"
-#include "SphereVsCapsule.h"
-#include "SphereVsSphere.h"
-#include "pair.h"
-#include "primitives.h"
-#include "utils.h"
+#include <DCA/Interactions/CapsuleVsCapsule.h>
+#include <DCA/Interactions/PlaneVsCapsule.h>
+#include <DCA/Interactions/PlaneVsPlane.h>
+#include <DCA/Interactions/PlaneVsSphere.h>
+#include <DCA/Interactions/SphereVsCapsule.h>
+#include <DCA/Interactions/SphereVsSphere.h>
+#include <DCA/Pair.h>
+#include <DCA/Utils/Primitives.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 
@@ -593,7 +595,7 @@ public:
         READ_PLANE_CAPSULE_DATA(p_b, c_a);
         Matrix12d d2DdP2_flipped;
         PlaneVsCapsule::compute_d2DdP2(d2DdP2_flipped, P, props);
-        d2DdP2 = d2DdP2_flipped.block(6,6,6,6);
+        d2DdP2 = d2DdP2_flipped.block(6, 6, 6, 6);
     }
 
     // Plane - Sphere

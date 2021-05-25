@@ -1,11 +1,11 @@
 #ifndef __DCA_CAPSULEDISTANCEOBJECTIVE_H__
 #define __DCA_CAPSULEDISTANCEOBJECTIVE_H__
 
-#include "FD.h"
-#include "Newton.h"
-#include "Sensitivity.h"
-#include "SoftUpperLimitConstraint.h"
-#include "utils.h"
+#include <DCA/Utils/FD.h>
+#include <DCA/Utils/Newton.h>
+#include <DCA/Utils/Sensitivity.h>
+#include <DCA/Utils/SoftUpperLimitConstraint.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 

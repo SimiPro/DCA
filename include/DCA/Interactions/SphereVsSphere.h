@@ -1,8 +1,8 @@
 #ifndef __DCA_SPHEREVSSPHERE_H__
 #define __DCA_SPHEREVSSPHERE_H__
 
-#include "FD.h"
-#include "utils.h"
+#include <DCA/Utils/FD.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 

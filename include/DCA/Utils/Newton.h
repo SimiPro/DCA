@@ -5,7 +5,7 @@
 #include <cmath>  // for std::isfinite
 #include <iostream>
 
-#include "utils.h"
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 
