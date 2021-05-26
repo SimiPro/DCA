@@ -69,7 +69,7 @@ public:
     static void compute_dXdP(Eigen::Matrix<double, 2, 12>& dXdP,
                              const Vector12d& P, const Vector2d& X);
 
-#ifdef RUN_FD_CHECK
+#if DCA_DEV_TOOLS == 1
 public:
 #else
 private:

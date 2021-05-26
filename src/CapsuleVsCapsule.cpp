@@ -77,13 +77,13 @@ void CapsuleVsCapsule::compute_dXdP(Eigen::Matrix<double, 2, 12>& dXdP,
 }
 
 void CapsuleVsCapsule::solveForX(const Vector12d& P, Vector2d& X) {
-#ifdef RUN_FD_CHECK
+#if DCA_DEV_TOOLS == 1
     // If we run FD checks, we set the solver residual lower.
     NewtonOptimizer<12, 2> optimizer(1e-12, 15);
 #else
     NewtonOptimizer<12, 2> optimizer;
-
 #endif
+
     X << 0.5, 0.5;
     optimizer.optimize(objective(), P, X, 100);
 }
