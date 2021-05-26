@@ -4,6 +4,7 @@
 #include <DCA/Utils/Newton.h>
 #include <DCA/Utils/Sensitivity.h>
 #include <DCA/Utils/SoftUpperLimitConstraint.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 

@@ -3,6 +3,7 @@
 #include <DCA/Interactions/CapsuleDistanceObjective.h>
 #include <DCA/Utils/FD.h>
 #include <DCA/Utils/Newton.h>
+#include <DCA/Utils/Utils.h>
 
 namespace DCA {
 
