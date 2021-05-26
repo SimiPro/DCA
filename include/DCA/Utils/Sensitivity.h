@@ -1,5 +1,4 @@
-#ifndef __DCA_SENSITIVIY_H__
-#define __DCA_SENSITIVIY_H__
+#pragma once
 
 #include <DCA/Utils/Utils.h>
 
@@ -70,4 +69,3 @@ public:
 };
 
 }  // namespace DCA
-#endif /* __DCA_SENSITIVIY_H__ */

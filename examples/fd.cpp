@@ -52,7 +52,7 @@ int main(int argc, char const *argv[]) {
     CapsuleVsCapsule::check_dXdP_12(P12, X);
 
     // Plane checks
-    DCA::Vector1d props1;
+    Vector1d props1;
     props1 << props(0);
     PlaneVsSphere::check_dDdP_3(P9, props1);
     PlaneVsSphere::check_d2DdP2_3(P9, props1);
@@ -65,7 +65,7 @@ int main(int argc, char const *argv[]) {
     PlaneVsCapsule::check_d2DdP2_6(P12, props1);
     PlaneVsCapsule::check_dDdP_12(P12, props1);
     PlaneVsCapsule::check_d2DdP2_12(P12, props1);
-    DCA::Vector0d props0;
+    Vector0d props0;
     PlaneVsPlane::check_dDdP_6(P12, props0);
     PlaneVsPlane::check_d2DdP2_6(P12, props0);
     PlaneVsPlane::check_dDdP_12(P12, props0);

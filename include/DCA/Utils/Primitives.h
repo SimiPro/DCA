@@ -1,9 +1,8 @@
-#ifndef __DCA_PRIMITIVES_H__
-#define __DCA_PRIMITIVES_H__
-
-#include <variant>
+#pragma once
 
 #include <DCA/Utils/Utils.h>
+
+#include <variant>
 
 namespace DCA {
 
@@ -58,4 +57,3 @@ struct Plane {
 using primitive_t = std::variant<Sphere, Capsule, Plane>;
 
 }  // namespace DCA
-#endif /* __DCA_PRIMITIVES_H__ */

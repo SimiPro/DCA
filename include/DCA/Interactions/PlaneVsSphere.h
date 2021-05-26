@@ -1,119 +1,118 @@
 #pragma once
 
 #include <DCA/Utils/FD.h>
-#include <DCA/Autodiff/AD_PlaneToSphere.h>
-#include <DCA/Interactions/SphereVsSphere.h>
 
 namespace DCA {
 
+/**
+ * @brief This helper is used to compute Plane vs. Sphere interactions.
+ */
 class PlaneVsSphere {
 public:
     /**
-     * @param P Plane pos, Plane normal, Sphere Pos
-     * @param props Sphere radius
+     * @brief Compute the distance between a plane and a sphere.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     * @return The distance between the plane and the sphere.
      */
-    static double compute_D(const Vector9d& P, const Vector1d& props) {
-        Vector2d radius_padded;
-        radius_padded << 0, props;
-
-        Vector3d spherePos = P.segment(6, 3);
-        Vector3d planePos = getProjectionOfPoint(P.segment(0, 6), spherePos);
-        Vector6d bothPos;
-        bothPos << planePos, spherePos;
-        return SphereVsSphere::compute_D(bothPos, radius_padded);
-    }
+    static double compute_D(const Vector9d& P, const Vector1d& props);
 
     FD_CHECK_dDdP(9, 9, 1, 0, "PlaneVsSphere - dDdP_9");
-    // full
+    /**
+     * @brief Compute the *full* derivative of the distance between a plane and a sphere with respect to P.
+     * @param[out] dDdP The *full* derivative \f$\frac{dD}{dP}\f$.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     */
     static void compute_dDdP(Vector9d& dDdP, const Vector9d& P,
-                             const Vector1d& props) {
-        PlaneToSphereDistance_CodeGen::AD_PlaneToSphereDistanceGradient(
-            P, props, dDdP);
-    }
+                             const Vector1d& props);
 
     FD_CHECK_dDdP(6, 9, 1, 0, "PlaneVsSphere - dDdP_6");
-    // to plane
+    /**
+     * @brief Compute the *partial* derivative of the distance between a plane and a sphere with respect to P.
+     * @param[out] dDdP The *partial* derivative \f$\frac{dD}{dP}\f$, that is with respect to the parameters of the plane.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Vector9d& P,
-                             const Vector1d& props) {
-        Vector9d dDdP_full;
-        PlaneToSphereDistance_CodeGen::AD_PlaneToSphereDistanceGradient(
-            P, props, dDdP_full);
-        dDdP = dDdP_full.head(6);
-    }
+                             const Vector1d& props);
 
     FD_CHECK_dDdP(3, 9, 1, 6, "PlaneVsSphere - dDdP_3");
-    // to sphere
+    /**
+     * @brief Compute the *partial* derivative of the distance between a plane and a sphere with respect to P.
+     * @param[out] dDdP The *partial* derivative \f$\frac{dD}{dP}\f$, that is with respect to the parameters of the sphere.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     */
     static void compute_dDdP(Vector3d& dDdP, const Vector9d& P,
-                             const Vector1d& props) {
-        Vector9d dDdP_full;
-        PlaneToSphereDistance_CodeGen::AD_PlaneToSphereDistanceGradient(
-            P, props, dDdP_full);
-        dDdP = dDdP_full.tail(3);
-    }
+                             const Vector1d& props);
 
     FD_CHECK_d2DdP2(9, 9, 1, 0, "PlaneVsSphere - d2DdP2_9");
+    /**
+     * @brief Compute the *full* second derivative of the distance between a plane and a sphere with respect to P.
+     * @param[out] d2DdP2 The *full* second derivative \f$\frac{d^2D}{dP^2}\f$.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     */
     static void compute_d2DdP2(Matrix9d& d2DdP2, const Vector9d& P,
-                               const Vector1d& props) {
-        PlaneToSphereDistance_CodeGen::AD_PlaneToSphereDistanceHessian(P, props,
-                                                                       d2DdP2);
-    }
+                               const Vector1d& props);
     FD_CHECK_d2DdP2(6, 9, 1, 0, "PlaneVsSphere - d2DdP2_6");
+    /**
+     * @brief Compute the *partial* second derivative of the distance between a plane and a sphere with respect to P.
+     * @param[out] d2DdP2 The *partial* second derivative \f$\frac{d^2D}{dP^2}\f$, that is with respect to the parameters of the plane.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Vector9d& P,
-                               const Vector1d& props) {
-        Matrix9d d2DdP2_full;
-        PlaneToSphereDistance_CodeGen::AD_PlaneToSphereDistanceHessian(
-            P, props, d2DdP2_full);
-        d2DdP2 = d2DdP2_full.block(0, 0, 6, 6);
-    }
+                               const Vector1d& props);
     FD_CHECK_d2DdP2(3, 9, 1, 6, "PlaneVsSphere - d2DdP2_3");
+    /**
+     * @brief Compute the *partial* second derivative of the distance between a plane and a sphere with respect to P.
+     * @param[out] d2DdP2 The *partial* second derivative \f$\frac{d^2D}{dP^2}\f$, that is with respect to the parameters of the sphere.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Vector9d& P,
-                               const Vector1d& props) {
-        Matrix9d d2DdP2_full;
-        PlaneToSphereDistance_CodeGen::AD_PlaneToSphereDistanceHessian(
-            P, props, d2DdP2_full);
-        d2DdP2 = d2DdP2_full.block(6, 6, 3, 3);
-    }
+                               const Vector1d& props);
 
 public:
     /**
-     * @param P Plane pos, Plane normal, Sphere Pos
-     * @param props Sphere radius
+     * @brief Compute the derivative of getProjectionOfPoint.
+     * @param[in] P The parameters for the plane and the sphere, that is the degrees of freedom (position and normal of the plane, position of the sphere), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the sphere.
+     * @return The full derivative of the projection of the point.
      */
     static Matrix3d getPointProjectionDerivative(const Vector9d& P,
-                                                 const Vector1d& props) {
-        Matrix3d mat = Matrix3d::Identity();
-        const Vector3d normal = P.segment(3, 3);
-        mat.row(0) += -normal.transpose() * normal(0);
-        mat.row(1) += -normal.transpose() * normal(1);
-        mat.row(2) += -normal.transpose() * normal(2);
-        return mat;
-    }
+                                                 const Vector1d& props);
 
     /**
-     * @param P Plane pos, Plane normal
-     * @todo put in PlaneHelper
+     * @brief Get a projection of a point onto a plane.
+     * @param[in] P The parameters for the plane, that is the degrees of freedom (position and normal of the plane), stacked.
+     * @param[in] point The point to project onto the plane.
+     * @return The projected point.
      */
     static Vector3d getProjectionOfPoint(const Vector6d& P,
-                                         const Vector3d& point) {
-        return point + -P.segment(3, 3) * getSignedDistanceToPoint(P, point);
-    }
+                                         const Vector3d& point);
 
     /**
-     * @param P Plane pos, Plane normal
+     * @brief Get a signed distance for a point to the plane.
+     * @param[in] P The parameters for the plane, that is the degrees of freedom (position and normal of the plane), stacked.
+     * @param[in] point The point to get the distance to the plane.
+     * @return The signed distance from the plane to the point.
      */
     static double getSignedDistanceToPoint(const Vector6d& P,
-                                           const Vector3d& point) {
-        return (point - P.head(3)).dot(P.segment(3, 3));
-    }
+                                           const Vector3d& point);
 
+    /**
+     * @brief Get the coefficients for the plane equation, that is \f$ \alpha x+\beta y+\gamma c=\delta\f$.
+     * @param[in] P The parameters for the plane, that is the degrees of freedom (position and normal of the plane), stacked.
+     * @param[out] a The coefficient alpha.
+     * @param[out] b The coefficient beta.
+     * @param[out] c The coefficient gamma.
+     * @param[out] d The coefficient delta.
+     */
     static void getCartesianEquationCoeffs(const Vector6d& P, double& a,
-                                           double& b, double& c, double& d) {
-        // normal from 3 to 5
-        a = P(3);
-        b = P(4);
-        c = P(5);
-        d = -(a * P(0) + b * P(1) + c * P(2));
-    }
+                                           double& b, double& c, double& d);
 };
 
 }  // namespace DCA

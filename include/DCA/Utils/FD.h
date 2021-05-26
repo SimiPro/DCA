@@ -1,7 +1,4 @@
-#ifndef __DCA_FD_H__
-#define __DCA_FD_H__
-
-#ifndef DOXYGEN_SHOULD_SKIP_THIS
+#pragma once
 
 #if DCA_DEV_TOOLS == 0
 // Define empty macros
@@ -17,9 +14,9 @@
 #define FD_CHECK_dXdP(NumDer, NumDofs, NumProps, StartDer, NAME)
 #else /* DCA_DEV_TOOLS == 0 */
 
-#include <iostream>
-
 #include <DCA/Utils/Utils.h>
+
+#include <iostream>
 
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
@@ -33,92 +30,97 @@ namespace DCA {
  * which is non static and uses different
  * function names (compute_O instead of compute_D)
  */
-#define FD_CHECK_dOdX(NumDer, NumDofs, NumProps, StartDer, NAME)            \
-    void check_dOdX_##NumDer(const Eigen::Matrix<double, NumDofs, 1>& X,    \
-                             const Eigen::Matrix<double, NumProps, 1>& P) { \
-        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_dDdP(          \
-            X, P,                                                           \
-            [&](const Eigen::Matrix<double, NumDofs, 1>& X,                 \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> double {    \
-                return compute_O(P, X);                                     \
-            },                                                              \
-            [&](Eigen::Matrix<double, NumDer, 1>& dOdP,                     \
-                const Eigen::Matrix<double, NumDofs, 1>& X,                 \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> void {      \
-                compute_dOdX(dOdP, P, X);                                   \
-            },                                                              \
-            NAME);                                                          \
+#define FD_CHECK_dOdX(NumDer, NumDofs, NumProps, StartDer, NAME)         \
+    inline void check_dOdX_##NumDer(                                     \
+        const Eigen::Matrix<double, NumDofs, 1>& X,                      \
+        const Eigen::Matrix<double, NumProps, 1>& P) {                   \
+        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_dDdP(       \
+            X, P,                                                        \
+            [&](const Eigen::Matrix<double, NumDofs, 1>& X,              \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> double { \
+                return compute_O(P, X);                                  \
+            },                                                           \
+            [&](Eigen::Matrix<double, NumDer, 1>& dOdP,                  \
+                const Eigen::Matrix<double, NumDofs, 1>& X,              \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> void {   \
+                compute_dOdX(dOdP, P, X);                                \
+            },                                                           \
+            NAME);                                                       \
     }
 
-#define FD_CHECK_d2OdX2(NumDer, NumDofs, NumProps, StartDer, NAME)            \
-    void check_d2OdX2_##NumDer(const Eigen::Matrix<double, NumDofs, 1>& X,    \
-                               const Eigen::Matrix<double, NumProps, 1>& P) { \
-        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdP2(          \
-            X, P,                                                             \
-            [&](Eigen::Matrix<double, NumDer, 1>& dOdX,                       \
-                const Eigen::Matrix<double, NumDofs, 1>& X,                   \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> void {        \
-                return compute_dOdX(dOdX, P, X);                              \
-            },                                                                \
-            [&](Eigen::Matrix<double, NumDer, NumDer>& d2OdP2,                \
-                const Eigen::Matrix<double, NumDofs, 1>& X,                   \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> void {        \
-                compute_d2OdX2(d2OdP2, P, X);                                 \
-            },                                                                \
-            NAME);                                                            \
+#define FD_CHECK_d2OdX2(NumDer, NumDofs, NumProps, StartDer, NAME)     \
+    inline void check_d2OdX2_##NumDer(                                 \
+        const Eigen::Matrix<double, NumDofs, 1>& X,                    \
+        const Eigen::Matrix<double, NumProps, 1>& P) {                 \
+        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdP2(   \
+            X, P,                                                      \
+            [&](Eigen::Matrix<double, NumDer, 1>& dOdX,                \
+                const Eigen::Matrix<double, NumDofs, 1>& X,            \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> void { \
+                return compute_dOdX(dOdX, P, X);                       \
+            },                                                         \
+            [&](Eigen::Matrix<double, NumDer, NumDer>& d2OdP2,         \
+                const Eigen::Matrix<double, NumDofs, 1>& X,            \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> void { \
+                compute_d2OdX2(d2OdP2, P, X);                          \
+            },                                                         \
+            NAME);                                                     \
     }
 
-#define FD_CHECK_dDdX(NumDer, NumDofs, NumProps, StartDer, NAME)            \
-    void check_dDdX_##NumDer(const Eigen::Matrix<double, NumDofs, 1>& X,    \
-                             const Eigen::Matrix<double, NumProps, 1>& P) { \
-        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_dDdP(          \
-            X, P,                                                           \
-            [&](const Eigen::Matrix<double, NumDofs, 1>& X,                 \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> double {    \
-                return compute_D(P, X);                                     \
-            },                                                              \
-            [&](Eigen::Matrix<double, NumDer, 1>& dOdP,                     \
-                const Eigen::Matrix<double, NumDofs, 1>& X,                 \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> void {      \
-                compute_dDdX(dOdP, P, X);                                   \
-            },                                                              \
-            NAME);                                                          \
+#define FD_CHECK_dDdX(NumDer, NumDofs, NumProps, StartDer, NAME)         \
+    inline void check_dDdX_##NumDer(                                     \
+        const Eigen::Matrix<double, NumDofs, 1>& X,                      \
+        const Eigen::Matrix<double, NumProps, 1>& P) {                   \
+        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_dDdP(       \
+            X, P,                                                        \
+            [&](const Eigen::Matrix<double, NumDofs, 1>& X,              \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> double { \
+                return compute_D(P, X);                                  \
+            },                                                           \
+            [&](Eigen::Matrix<double, NumDer, 1>& dOdP,                  \
+                const Eigen::Matrix<double, NumDofs, 1>& X,              \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> void {   \
+                compute_dDdX(dOdP, P, X);                                \
+            },                                                           \
+            NAME);                                                       \
     }
 
-#define FD_CHECK_d2DdX2(NumDer, NumDofs, NumProps, StartDer, NAME)            \
-    void check_d2DdX2_##NumDer(const Eigen::Matrix<double, NumDofs, 1>& X,    \
-                               const Eigen::Matrix<double, NumProps, 1>& P) { \
-        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdP2(          \
-            X, P,                                                             \
-            [&](Eigen::Matrix<double, NumDer, 1>& dOdX,                       \
-                const Eigen::Matrix<double, NumDofs, 1>& X,                   \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> void {        \
-                return compute_dDdX(dOdX, P, X);                              \
-            },                                                                \
-            [&](Eigen::Matrix<double, NumDer, NumDer>& d2OdP2,                \
-                const Eigen::Matrix<double, NumDofs, 1>& X,                   \
-                const Eigen::Matrix<double, NumProps, 1>& P) -> void {        \
-                compute_d2DdX2(d2OdP2, P, X);                                 \
-            },                                                                \
-            NAME);                                                            \
+#define FD_CHECK_d2DdX2(NumDer, NumDofs, NumProps, StartDer, NAME)     \
+    inline void check_d2DdX2_##NumDer(                                 \
+        const Eigen::Matrix<double, NumDofs, 1>& X,                    \
+        const Eigen::Matrix<double, NumProps, 1>& P) {                 \
+        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdP2(   \
+            X, P,                                                      \
+            [&](Eigen::Matrix<double, NumDer, 1>& dOdX,                \
+                const Eigen::Matrix<double, NumDofs, 1>& X,            \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> void { \
+                return compute_dDdX(dOdX, P, X);                       \
+            },                                                         \
+            [&](Eigen::Matrix<double, NumDer, NumDer>& d2OdP2,         \
+                const Eigen::Matrix<double, NumDofs, 1>& X,            \
+                const Eigen::Matrix<double, NumProps, 1>& P) -> void { \
+                compute_d2DdX2(d2OdP2, P, X);                          \
+            },                                                         \
+            NAME);                                                     \
     }
 
-#define FD_CHECK_d2DdXdP(NumDer, NumDofs, NumProps, StartDer, NAME)            \
-    void check_d2DdXdP_##NumDer(const Eigen::Matrix<double, NumDofs, 1>& P,    \
-                                const Eigen::Matrix<double, NumProps, 1>& X) { \
-        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdXdP(          \
-            P, X,                                                              \
-            [&](Eigen::Matrix<double, NumProps, 1>& dDdX,                      \
-                const Eigen::Matrix<double, NumDofs, 1>& P,                    \
-                const Eigen::Matrix<double, NumProps, 1>& X) -> void {         \
-                compute_dDdX(dDdX, P, X);                                      \
-            },                                                                 \
-            [&](Eigen::Matrix<double, NumProps, NumDer>& d2DdXdP,              \
-                const Eigen::Matrix<double, NumDofs, 1>& P,                    \
-                const Eigen::Matrix<double, NumProps, 1>& X) -> void {         \
-                compute_d2DdXdP(d2DdXdP, P, X);                                \
-            },                                                                 \
-            NAME);                                                             \
+#define FD_CHECK_d2DdXdP(NumDer, NumDofs, NumProps, StartDer, NAME)    \
+    inline void check_d2DdXdP_##NumDer(                                \
+        const Eigen::Matrix<double, NumDofs, 1>& P,                    \
+        const Eigen::Matrix<double, NumProps, 1>& X) {                 \
+        FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdXdP(  \
+            P, X,                                                      \
+            [&](Eigen::Matrix<double, NumProps, 1>& dDdX,              \
+                const Eigen::Matrix<double, NumDofs, 1>& P,            \
+                const Eigen::Matrix<double, NumProps, 1>& X) -> void { \
+                compute_dDdX(dDdX, P, X);                              \
+            },                                                         \
+            [&](Eigen::Matrix<double, NumProps, NumDer>& d2DdXdP,      \
+                const Eigen::Matrix<double, NumDofs, 1>& P,            \
+                const Eigen::Matrix<double, NumProps, 1>& X) -> void { \
+                compute_d2DdXdP(d2DdXdP, P, X);                        \
+            },                                                         \
+            NAME);                                                     \
     }
 
 #define FD_CHECK_dDdP(NumDer, NumDofs, NumProps, StartDer, NAME)             \
@@ -159,7 +161,7 @@ namespace DCA {
     }
 
 #define FD_CHECK_dDdP_NON_STATIC(NumDer, NumDofs, NumProps, StartDer, NAME)  \
-    void check_dDdP_##NumDer(                                                \
+    inline void check_dDdP_##NumDer(                                         \
         const Eigen::Matrix<double, NumDofs, 1>& P,                          \
         const Eigen::Matrix<double, NumProps, 1>& props) {                   \
         FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_dDdP(           \
@@ -177,7 +179,7 @@ namespace DCA {
     }
 
 #define FD_CHECK_d2DdP2_NON_STATIC(NumDer, NumDofs, NumProps, StartDer, NAME) \
-    void check_d2DdP2_##NumDer(                                               \
+    inline void check_d2DdP2_##NumDer(                                        \
         const Eigen::Matrix<double, NumDofs, 1>& P,                           \
         const Eigen::Matrix<double, NumProps, 1>& props) {                    \
         FD_Check<NumDer, NumDofs, NumProps, StartDer>::check_d2DdP2(          \
@@ -444,7 +446,3 @@ public:
 }  // namespace DCA
 
 #endif /* DCA_DEV_TOOLS */
-
-#endif /* DOXYGEN_SHOULD_SKIP_THIS */
-
-#endif /* __DCA_FD_H__ */

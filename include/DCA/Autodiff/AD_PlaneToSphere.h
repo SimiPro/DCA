@@ -1,4 +1,5 @@
 #pragma once
+
 #include <Eigen/Core>
 
 namespace PlaneToSphereDistance_CodeGen {

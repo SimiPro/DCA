@@ -1,82 +1,69 @@
-#ifndef __DCA_PLANE_H__
-#define __DCA_PLANE_H__
+#pragma once
 
-#include <DCA/Autodiff/AD_PlaneToPlane.h>
 #include <DCA/Utils/FD.h>
-#include <DCA/Interactions/PlaneVsSphere.h>
 
 namespace DCA {
 
+/**
+ * @brief This helper is used to compute Plane vs. Plane interactions.
+ */
 class PlaneVsPlane {
 public:
-    static double compute_D(const Vector12d& P, const Vector0d& props) {
-        Vector3d normal1 = P.segment(3, 3);
-        Vector3d normal2 = P.segment(9, 3);
-        if (fabs(1. - fabs(normal1.dot(normal2))) < 1e-8) {
-            Vector3d projP =
-                PlaneVsSphere::getProjectionOfPoint(P.head(6), P.segment(6, 3));
-            return (P.segment(6, 3) - projP).norm();
-        } else {
-            return 0.;
-        }
-    }
+    /**
+     * @brief Compute the distance between two planes.
+     * @param[in] P The parameters for both planes, that is the degrees of freedom (position and normal for each plane), stacked.
+     * @param[in] props The properties of both primitives, that is nothing.
+     * @return The distance between the two planes.
+     */
+    static double compute_D(const Vector12d& P, const Vector0d& props);
 
     FD_CHECK_dDdP(12, 12, 0, 0, "PlaneVsPlane - dDdP_12");
+    /**
+     * @brief Compute the *full* derivative of the distance between two planes with respect to P.
+     * @param[out] dDdP The *full* derivative \f$\frac{dD}{dP}\f$.
+     * @param[in] P The parameters for both planes, that is the degrees of freedom (position and normal for each plane), stacked.
+     * @param[in] props The properties of both primitives, that is nothing.
+     */
     static void compute_dDdP(Vector12d& dDdP, const Vector12d& P,
-                             const Vector0d& props) {
-        if (sameNormal(P)) {
-            PlaneToPlaneDistance_CodeGen::AD_PlaneToPlaneDistanceGradient(P,
-                                                                          dDdP);
-        } else {
-            dDdP.setZero();
-        }
-    }
+                             const Vector0d& props);
 
     FD_CHECK_d2DdP2(12, 12, 0, 0, "PlaneVsPlane - d2DdP2_12");
+    /**
+     * @brief Compute the *full* derivative of the distance between two planes with respect to P.
+     * @param[out] dDdP The *full* derivative \f$\frac{dD}{dP}\f$.
+     * @param[in] P The parameters for both planes, that is the degrees of freedom (position and normal for each plane), stacked.
+     * @param[in] props The properties of both primitives, that is nothing.
+     */
     static void compute_d2DdP2(Matrix12d& d2DdP2, const Vector12d& P,
-                               const Vector0d& props) {
-        if (sameNormal(P)) {
-            PlaneToPlaneDistance_CodeGen::AD_PlaneToPlaneDistanceHessian(
-                P, d2DdP2);
-        } else {
-            d2DdP2.setZero();
-        }
-    }
+                               const Vector0d& props);
 
     FD_CHECK_dDdP(6, 12, 0, 0, "PlaneVsPlane - dDdP_6");
+    /**
+     * @brief Compute the *partial* derivative of the distance between two planes with respect to P.
+     * @param[out] dDdP The *partial* derivative \f$\frac{dD}{dP}\f$, that is with respect to the parameters of the first plane.
+     * @param[in] P The parameters for both planes, that is the degrees of freedom (position and normal for each plane), stacked.
+     * @param[in] props The properties of both primitives, that is nothing.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Vector12d& P,
-                             const Vector0d& props) {
-        if (sameNormal(P)) {
-            Vector12d dDdP_full;
-            PlaneToPlaneDistance_CodeGen::AD_PlaneToPlaneDistanceGradient(
-                P, dDdP_full);
-            dDdP = dDdP_full.head(6);
-        } else {
-            dDdP.setZero();
-        }
-    }
+                             const Vector0d& props);
 
     FD_CHECK_d2DdP2(6, 12, 0, 0, "PlaneVsPlane - d2DdP2_6");
+    /**
+     * @brief Compute the *partial* second derivative of the distance between two planes with respect to P.
+     * @param[out] d2DdP2 The *partial* second derivative \f$\frac{d^2D}{dP^2}\f$, that is with respect to the parameters of the sphere.
+     * @param[in] P The parameters for both planes, that is the degrees of freedom (position and normal for each plane), stacked.
+     * @param[in] props The properties of both primitives, that is nothing.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Vector12d& P,
-                               const Vector0d& props) {
-        if (sameNormal(P)) {
-            Matrix12d d2DdP2_full;
-            PlaneToPlaneDistance_CodeGen::AD_PlaneToPlaneDistanceHessian(
-                P, d2DdP2_full);
-            d2DdP2 = d2DdP2_full.block(0, 0, 6, 6);
-        } else {
-            d2DdP2.setZero();
-        }
-    }
+                               const Vector0d& props);
 
 private:
-    static bool sameNormal(const Vector12d& P) {
-        Vector3d n1 = P.segment(3, 3);
-        Vector3d n2 = P.segment(9, 3);
-        return (fabs(fabs(n1.dot(n2)) - 1.) < 1e-5);
-    }
+    /**
+     * @brief Returns whether two planes have the same normal.
+     * @param[in] P The parameters for both planes, that is the degrees of freedom (position and normal for each plane), stacked.
+     * @return True if both planes have the same normal (also if the normals are flipped).
+     */
+    static bool sameNormal(const Vector12d& P);
 };
 
 }  // namespace DCA
-
-#endif /* __DCA_PLANE_H__ */

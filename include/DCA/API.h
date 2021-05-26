@@ -1,55 +1,9 @@
-#ifndef __DCA_API_H__
-#define __DCA_API_H__
+#pragma once
 
-#include <DCA/Interactions/CapsuleVsCapsule.h>
-#include <DCA/Interactions/PlaneVsCapsule.h>
-#include <DCA/Interactions/PlaneVsPlane.h>
-#include <DCA/Interactions/PlaneVsSphere.h>
-#include <DCA/Interactions/SphereVsCapsule.h>
-#include <DCA/Interactions/SphereVsSphere.h>
 #include <DCA/Pair.h>
 #include <DCA/Utils/Primitives.h>
-#include <DCA/Utils/Utils.h>
 
 namespace DCA {
-
-#define READ_SPHERE_SPHERE_DATA(s_a, s_b) \
-    Vector2d props;                       \
-    props(0) = s_a.radius;                \
-    props(1) = s_b.radius;                \
-    Vector6d P;                           \
-    P << s_a.position, s_b.position;
-
-#define READ_SPHERE_CAPSULE_DATA(s_a, c_b) \
-    Vector2d props;                        \
-    props(0) = s_a.radius;                 \
-    props(1) = c_b.radius;                 \
-    Vector9d P;                            \
-    P << s_a.position, c_b.startPosition, c_b.endPosition;
-
-#define READ_CAPSULE_CAPSULE_DATA(c_a, c_b) \
-    Vector2d props;                         \
-    props(0) = c_a.radius;                  \
-    props(1) = c_b.radius;                  \
-    Vector12d P;                            \
-    P << c_a.startPosition, c_a.endPosition, c_b.startPosition, c_b.endPosition;
-
-#define READ_PLANE_PLANE_DATA(p_a, p_b)                \
-    Vector12d P;                                       \
-    P << p_a.point, p_a.normal, p_b.point, p_b.normal; \
-    Vector0d props;
-
-#define READ_PLANE_CAPSULE_DATA(p_a, c_b) \
-    Vector1d props;                       \
-    props(0) = c_b.radius;                \
-    Vector12d P;                          \
-    P << p_a.point, p_a.normal, c_b.startPosition, c_b.endPosition;
-
-#define READ_PLANE_SPHERE_DATA(p_a, s_b) \
-    Vector1d props;                      \
-    props(0) = s_b.radius;               \
-    Vector9d P;                          \
-    P << p_a.point, p_a.normal, s_b.position;
 
 /**
  * @brief Public %API.
@@ -60,7 +14,7 @@ class API {
 public:
     /**
      * @defgroup SphereVsSphere
-     * @brief API for %Sphere vs. %Sphere interactions.
+     * @brief %API for %Sphere vs. %Sphere interactions.
      * 
      * This module contains all helpers for %Sphere vs. %Sphere interactions.
      * @{
@@ -73,10 +27,7 @@ public:
      * @param s_b The second sphere
      * @return The distance between both spheres.
      */
-    static double compute_D(const Sphere& s_a, const Sphere& s_b) {
-        READ_SPHERE_SPHERE_DATA(s_a, s_b);
-        return SphereVsSphere::compute_D(P, props);
-    }
+    static double compute_D(const Sphere& s_a, const Sphere& s_b);
 
     /**
      * @brief Computes the *full* derivative of the distance between both spheres.
@@ -89,10 +40,7 @@ public:
      * @param s_b The second sphere
      */
     static void compute_dDdP(Vector6d& dDdP, const Sphere& s_a,
-                             const Sphere& s_b) {
-        READ_SPHERE_SPHERE_DATA(s_a, s_b);
-        SphereVsSphere::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
 
     /**
      * @brief Computes the *partial* derivative of the distance between both spheres.
@@ -107,10 +55,7 @@ public:
      * @attention This is not the *full* derivative, only the segment which belong to the first sphere.
      */
     static void compute_dDdP(Vector3d& dDdP, const Sphere& s_a,
-                             const Sphere& s_b) {
-        READ_SPHERE_SPHERE_DATA(s_a, s_b);
-        SphereVsSphere::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
 
     /**
      * @brief Computes the *full* second derivative of the distance between both spheres.
@@ -123,10 +68,7 @@ public:
      * @param s_b The second sphere
      */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Sphere& s_a,
-                               const Sphere& s_b) {
-        READ_SPHERE_SPHERE_DATA(s_a, s_b);
-        SphereVsSphere::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
 
     /**
      * @brief Computes the *partial* second derivative of the distance between both spheres.
@@ -141,10 +83,7 @@ public:
      * @attention This is not the *full* derivative, only the block belonging to the first sphere.
      */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Sphere& s_a,
-                               const Sphere& s_b) {
-        READ_SPHERE_SPHERE_DATA(s_a, s_b);
-        SphereVsSphere::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
 
     /**
      * @}
@@ -152,7 +91,7 @@ public:
 
     /**
      * @defgroup SphereVsCapsule
-     * @brief API for %Sphere vs. %Capsule interactions.
+     * @brief %API for %Sphere vs. %Capsule interactions.
      * 
      * This module contains all helpers for %Sphere vs. %Capsule interactions.
      * @{
@@ -165,10 +104,7 @@ public:
      * @param c_b The capsule
      * @return The distance between both primitives.
      */
-    static double compute_D(const Sphere& s_a, const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        return SphereVsCapsule::compute_D(P, props);
-    }
+    static double compute_D(const Sphere& s_a, const Capsule& c_b);
 
     /**
      * @brief Computes the *full* derivative of the distance between a sphere and a capsule.
@@ -181,10 +117,7 @@ public:
      * @param c_b The capsule
      */
     static void compute_dDdP(Vector9d& dDdP, const Sphere& s_a,
-                             const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        SphereVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Capsule& c_b);
 
     /**
      * @brief Computes the *partial* derivative of the distance between a sphere and a capsule.
@@ -199,10 +132,7 @@ public:
      * @attention This is not the *full* derivative, only the segment which belongs to the sphere.
      */
     static void compute_dDdP(Vector3d& dDdP, const Sphere& s_a,
-                             const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        SphereVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Capsule& c_b);
 
     /**
      * @brief Computes the *partial* derivative of the distance between a sphere and a capsule.
@@ -217,10 +147,7 @@ public:
      * @attention This is not the *full* derivative, only the segment which belongs to the capsule.
      */
     static void compute_dDdP(Vector6d& dDdP, const Sphere& s_a,
-                             const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        SphereVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Capsule& c_b);
 
     /**
      * @brief Computes the *full* second derivative of the distance between a sphere and a capsule.
@@ -233,10 +160,7 @@ public:
      * @param c_b The capsule
      */
     static void compute_d2DdP2(Matrix9d& d2DdP2, const Sphere& s_a,
-                               const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Capsule& c_b);
 
     /**
      * @brief Computes the *partial* second derivative of the distance between a sphere and a capsule.
@@ -251,10 +175,7 @@ public:
      * @attention This is not the *full* derivative, only the block which belongs to the sphere.
      */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Sphere& s_a,
-                               const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Capsule& c_b);
 
     /**
      * @brief Computes the *partial* second derivative of the distance between a sphere and a capsule.
@@ -269,10 +190,7 @@ public:
      * @attention This is not the *full* second derivative, only the block which belongs to the capsule.
      */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Sphere& s_a,
-                               const Capsule& c_b) {
-        READ_SPHERE_CAPSULE_DATA(s_a, c_b);
-        SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Capsule& c_b);
 
     /**
      * @}
@@ -280,7 +198,7 @@ public:
 
     /**
      * @defgroup CapsuleVsSphere
-     * @brief API for %Capsule vs. %Sphere interactions.
+     * @brief %API for %Capsule vs. %Sphere interactions.
      * 
      * This module contains all helpers for %Capsule vs. %Sphere interactions.
      * @{
@@ -293,10 +211,7 @@ public:
      * @param s_b The sphere
      * @return The distance between both primitives.
      */
-    static double compute_D(const Capsule& c_a, const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        return SphereVsCapsule::compute_D(P, props);
-    }
+    static double compute_D(const Capsule& c_a, const Sphere& s_b);
 
     /**
      * @brief Computes the *full* derivative of the distance between a capsule and a sphere.
@@ -309,13 +224,7 @@ public:
      * @param s_b The sphere
      */
     static void compute_dDdP(Vector9d& dDdP, const Capsule& c_a,
-                             const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        Vector9d dDdP_flip;
-        SphereVsCapsule::compute_dDdP(dDdP_flip, P, props);
-        dDdP.head(6) = dDdP_flip.tail(6);
-        dDdP.tail(3) = dDdP_flip.head(3);
-    }
+                             const Sphere& s_b);
 
     /**
      * @brief Computes the *partial* derivative of the distance between a capsule and a sphere.
@@ -330,10 +239,7 @@ public:
      * @attention This is not the *full* derivative, only the segment which belongs to the capsule.
      */
     static void compute_dDdP(Vector6d& dDdP, const Capsule& c_a,
-                             const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        SphereVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
 
     /**
      * @brief Computes the *partial* derivative of the distance between a capsule and a sphere.
@@ -348,10 +254,7 @@ public:
      * @attention This is not the *full* derivative, only the segment which belongs to the sphere.
      */
     static void compute_dDdP(Vector3d& dDdP, const Capsule& c_a,
-                             const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        SphereVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
 
     /**
      * @brief Computes the *full* second derivative of the distance between a capsule and a sphere.
@@ -364,16 +267,7 @@ public:
      * @param s_b The sphere
      */
     static void compute_d2DdP2(Matrix9d& d2DdP2, const Capsule& c_a,
-                               const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        Matrix9d d2DdP2_flip;
-        SphereVsCapsule::compute_d2DdP2(d2DdP2_flip, P, props);
-        d2DdP2.block(0, 0, 6, 6) = d2DdP2_flip.block(3, 3, 6, 6);
-        d2DdP2.block(6, 6, 3, 3) = d2DdP2_flip.block(0, 0, 3, 3);
-
-        d2DdP2.block(0, 6, 6, 3) = d2DdP2_flip.block(3, 0, 6, 3);
-        d2DdP2.block(6, 0, 3, 6) = d2DdP2_flip.block(0, 3, 3, 6);
-    }
+                               const Sphere& s_b);
 
     /**
      * @brief Computes the *partial* second derivative of the distance between a capsule and a sphere.
@@ -388,10 +282,7 @@ public:
      * @attention This is not the *full* second derivative, only the block which belongs to the capsule.
      */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Capsule& c_a,
-                               const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
 
     /**
      * @brief Computes the *partial* second derivative of the distance between a capsule and a sphere.
@@ -406,10 +297,7 @@ public:
      * @attention This is not the *full* derivative, only the block which belongs to the sphere.
      */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Capsule& c_a,
-                               const Sphere& s_b) {
-        READ_SPHERE_CAPSULE_DATA(s_b, c_a);
-        SphereVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
 
     /**
      * @}
@@ -417,7 +305,7 @@ public:
 
     /**
      * @defgroup CapsuleVsCapsule
-     * @brief API for %Capsule vs. %Capsule interactions.
+     * @brief %API for %Capsule vs. %Capsule interactions.
      * 
      * This module contains all helpers for %Capsule vs. %Capsule interactions.
      * @{
@@ -430,10 +318,7 @@ public:
      * @param c_b The second capsule
      * @return The distance between both primitives.
      */
-    static double compute_D(const Capsule& c_a, const Capsule& c_b) {
-        READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
-        return CapsuleVsCapsule::compute_D(P, props);
-    }
+    static double compute_D(const Capsule& c_a, const Capsule& c_b);
 
     /**
      * @brief Computes the *full* derivative of the distance between both capsules.
@@ -446,10 +331,7 @@ public:
      * @param c_b The second capsule
      */
     static void compute_dDdP(Vector12d& dDdP, const Capsule& c_a,
-                             const Capsule& c_b) {
-        READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
-        CapsuleVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Capsule& c_b);
 
     /**
      * @brief Computes the *partial* derivative of the distance between both capsules.
@@ -464,10 +346,7 @@ public:
      * @attention This is not the *full* derivative, only the segment which belong to the first capsule.
      */
     static void compute_dDdP(Vector6d& dDdP, const Capsule& c_a,
-                             const Capsule& c_b) {
-        READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
-        CapsuleVsCapsule::compute_dDdP(dDdP, P, props);
-    }
+                             const Capsule& c_b);
 
     /**
      * @brief Computes the *full* second derivative of the distance between both capsules.
@@ -480,10 +359,7 @@ public:
      * @param c_b The second capsule
      */
     static void compute_d2DdP2(Matrix12d& d2DdP2, const Capsule& c_a,
-                               const Capsule& c_b) {
-        READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
-        CapsuleVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Capsule& c_b);
 
     /**
      * @brief Computes the *partial* second derivative of the distance between both capsules.
@@ -498,183 +374,456 @@ public:
      * @attention This is not the *full* derivative, only the block belonging to the first capsule.
      */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Capsule& c_a,
-                               const Capsule& c_b) {
-        READ_CAPSULE_CAPSULE_DATA(c_a, c_b);
-        CapsuleVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Capsule& c_b);
 
     /**
      * @}
      */ // end of group CapsuleVsCapsule
 
-    // Plane - Plane
-    static double compute_D(const Plane& p_a, const Plane& p_b) {
-        READ_PLANE_PLANE_DATA(p_a, p_b);
-        return PlaneVsPlane::compute_D(P, props);
-    }
-    static void compute_dDdP(Vector12d& dDdP, const Plane& p_a,
-                             const Plane& p_b) {
-        READ_PLANE_PLANE_DATA(p_a, p_b);
-        PlaneVsPlane::compute_dDdP(dDdP, P, props);
-    }
-    static void compute_d2DdP2(Matrix12d& d2DdP2, const Plane& p_a,
-                               const Plane& p_b) {
-        READ_PLANE_PLANE_DATA(p_a, p_b);
-        PlaneVsPlane::compute_d2DdP2(d2DdP2, P, props);
-    }
-    static void compute_dDdP(Vector6d& dDdP, const Plane& p_a,
-                             const Plane& p_b) {
-        READ_PLANE_PLANE_DATA(p_a, p_b);
-        PlaneVsPlane::compute_dDdP(dDdP, P, props);
-    }
-    static void compute_d2DdP2(Matrix6d& d2DdP2, const Plane& p_a,
-                               const Plane& p_b) {
-        READ_PLANE_PLANE_DATA(p_a, p_b);
-        PlaneVsPlane::compute_d2DdP2(d2DdP2, P, props);
-    }
+    /**
+     * @defgroup PlaneVsPlane
+     * @brief %API for %Plane vs. %Plane interactions.
+     * 
+     * This module contains all helpers for %Plane vs. %Plane interactions.
+     * @{
+     */
 
-    // Plane - Caps
-    static double compute_D(const Plane& p_a, const Capsule& c_b) {
-        READ_PLANE_CAPSULE_DATA(p_a, c_b);
-        return PlaneVsCapsule::compute_D(P, props);
-    }
-    static void compute_dDdP(Vector12d& dDdP, const Plane& p_a,
-                             const Capsule& c_b) {
-        READ_PLANE_CAPSULE_DATA(p_a, c_b);
-        PlaneVsCapsule::compute_dDdP(dDdP, P, props);
-    }
-    static void compute_d2DdP2(Matrix12d& d2DdP2, const Plane& p_a,
-                               const Capsule& c_b) {
-        READ_PLANE_CAPSULE_DATA(p_a, c_b);
-        PlaneVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
-    static void compute_dDdP(Vector6d& dDdP, const Plane& p_a,
-                             const Capsule& c_b) {
-        READ_PLANE_CAPSULE_DATA(p_a, c_b);
-        PlaneVsCapsule::compute_dDdP(dDdP, P, props);
-    }
-    static void compute_d2DdP2(Matrix6d& d2DdP2, const Plane& p_a,
-                               const Capsule& c_b) {
-        READ_PLANE_CAPSULE_DATA(p_a, c_b);
-        PlaneVsCapsule::compute_d2DdP2(d2DdP2, P, props);
-    }
+    /** 
+     * @brief Computes the distance between two planes.
+     * 
+     * @param p_a The first plane
+     * @param p_b The second plane
+     * @return The distance between both primitives.
+     */
+    static double compute_D(const Plane& p_a, const Plane& p_b);
 
-    // Caps - Plane
-    static double compute_D(const Capsule& c_a, const Plane& p_b) {
-        READ_PLANE_CAPSULE_DATA(p_b, c_a);
-        return PlaneVsCapsule::compute_D(P, props);
-    }
+    /**
+     * @brief Computes the *full* derivative of the distance between two planes.
+     * 
+     * The derivative is of size 12,
+     * meaning it is taken with respect to the parameters of both planes (both positions and normals, a total of 12 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for both planes.
+     * @param p_a The first plane
+     * @param p_b The second plane
+     */
+    static void compute_dDdP(Vector12d& dDdP, const Plane& p_a,
+                             const Plane& p_b);
+
+    /**
+     * @brief Computes the *full* second derivative of the distance between two planes.
+     * 
+     * The derivative is of size 12 by 12,
+     * meaning it is taken with respect to the parameters of both planes (both positions and normals, a total of 12 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for both planes.
+     * @param p_a The first plane
+     * @param p_b The second plane
+     */
+    static void compute_d2DdP2(Matrix12d& d2DdP2, const Plane& p_a,
+                               const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* derivative of the distance between two planes.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the first plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the first planes.
+     * @param p_a The first plane
+     * @param p_b The second plane
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the first plane.
+     */
+    static void compute_dDdP(Vector6d& dDdP, const Plane& p_a,
+                             const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between two planes.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the first plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the first planes.
+     * @param p_a The first plane
+     * @param p_b The second plane
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the first plane.
+     */
+    static void compute_d2DdP2(Matrix6d& d2DdP2, const Plane& p_a,
+                               const Plane& p_b);
+
+    /**
+     * @}
+     */ // end of group PlaneVsPlane
+
+    /**
+     * @defgroup PlaneVsCapsule
+     * @brief %API for %Plane vs. %Capsule interactions.
+     * 
+     * This module contains all helpers for %Plane vs. %Capsule interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between a plane and a capsule.
+     * 
+     * @param p_a The plane
+     * @param c_b The capsule
+     * @return The distance between both primitives.
+     */
+    static double compute_D(const Plane& p_a, const Capsule& c_b);
+
+    /**
+     * @brief Computes the *full* derivative of the distance between a plane and a capsule.
+     * 
+     * The derivative is of size 12,
+     * meaning it is taken with respect to the parameters of the plane and the capsule (plane position and normal, capsule start- and end-position, a total of 12 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the plane and the capsule.
+     * @param p_a The plane
+     * @param c_b The capsule
+     */
+    static void compute_dDdP(Vector12d& dDdP, const Plane& p_a,
+                             const Capsule& c_b);
+
+    /**
+     * @brief Computes the *full* second derivative of the distance between a plane and a capsule.
+     * 
+     * The derivative is of size 12 by 12,
+     * meaning it is taken with respect to the parameters of the plane and the capsule (plane position and normal, capsule start- and end-position, a total of 12 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the plane and the capsule.
+     * @param p_a The plane
+     * @param c_b The capsule
+     */
+    static void compute_d2DdP2(Matrix12d& d2DdP2, const Plane& p_a,
+                               const Capsule& c_b);
+
+    /**
+     * @brief Computes the *partial* derivative of the distance between a plane and a capsule.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the planes.
+     * @param p_a The plane
+     * @param c_b The capsule
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the first plane.
+     */
+    static void compute_dDdP(Vector6d& dDdP, const Plane& p_a,
+                             const Capsule& c_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a plane and a capsule.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the planes.
+     * @param p_a The plane
+     * @param c_b The capsule
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the first plane.
+     */
+    static void compute_d2DdP2(Matrix6d& d2DdP2, const Plane& p_a,
+                               const Capsule& c_b);
+
+    /**
+     * @}
+     */ // end of group PlaneVsCapsule
+
+    /**
+     * @defgroup CapsuleVsPlane
+     * @brief %API for %Capsule vs. %Plane interactions.
+     * 
+     * This module contains all helpers for %Capsule vs. %Plane interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between a capsule and a plane.
+     * 
+     * @param c_a The capsule
+     * @param p_b The plane
+     * @return The distance between both primitives.
+     */
+    static double compute_D(const Capsule& c_a, const Plane& p_b);
+
+    /**
+     * @brief Computes the *full* derivative of the distance between a capsule and a plane.
+     * 
+     * The derivative is of size 12,
+     * meaning it is taken with respect to the parameters of the capsule and the plane (capsule start- and end-position, plane position and normal, a total of 12 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the capsule and the plane.
+     * @param c_a The capsule
+     * @param p_b The plane
+     */
     static void compute_dDdP(Vector12d& dDdP, const Capsule& c_a,
-                             const Plane& p_b) {
-        READ_PLANE_CAPSULE_DATA(p_b, c_a);
-        Vector12d dDdP_flipped;
-        PlaneVsCapsule::compute_dDdP(dDdP_flipped, P, props);
-        dDdP.head(6) = dDdP_flipped.tail(6);
-        dDdP.tail(6) = dDdP_flipped.head(6);
-    }
+                             const Plane& p_b);
+
+    /**
+     * @brief Computes the *full* second derivative of the distance between a capsule and a plane.
+     * 
+     * The derivative is of size 12 by 12,
+     * meaning it is taken with respect to the parameters of the capsule and the plane (capsule start- and end-position, plane position and normal, a total of 12 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for capsule and the plane.
+     * @param c_a The capsule
+     * @param p_b The plane
+     */
     static void compute_d2DdP2(Matrix12d& d2DdP2, const Capsule& c_a,
-                               const Plane& p_b) {
-        READ_PLANE_CAPSULE_DATA(p_b, c_a);
-        Matrix12d d2DdP2_flipped;
-        PlaneVsCapsule::compute_d2DdP2(d2DdP2_flipped, P, props);
-        d2DdP2.block(0, 0, 6, 6) = d2DdP2_flipped.block(6, 6, 6, 6);
-        d2DdP2.block(6, 6, 6, 6) = d2DdP2_flipped.block(0, 0, 6, 6);
+                               const Plane& p_b);
 
-        d2DdP2.block(0, 6, 6, 6) = d2DdP2_flipped.block(6, 0, 6, 6);
-        d2DdP2.block(6, 0, 6, 6) = d2DdP2_flipped.block(0, 6, 6, 6);
-    }
+    /**
+     * @brief Computes the *partial* derivative of the distance between a capsule and a plane.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the capsule (start- and end-position, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the capsule and the plane.
+     * @param c_a The capsule
+     * @param p_b The plane
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the capsule.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Capsule& c_a,
-                             const Plane& p_b) {
-        READ_PLANE_CAPSULE_DATA(p_b, c_a);
-        Vector12d dDdP_flipped;
-        PlaneVsCapsule::compute_dDdP(dDdP_flipped, P, props);
-        dDdP = dDdP_flipped.tail(6);
-    }
+                             const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a capsule and a plane.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the capsule (start- and end-position, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the capsule and the plane.
+     * @param c_a The capsule
+     * @param p_b The plane
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the capsule.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Capsule& c_a,
-                               const Plane& p_b) {
-        READ_PLANE_CAPSULE_DATA(p_b, c_a);
-        Matrix12d d2DdP2_flipped;
-        PlaneVsCapsule::compute_d2DdP2(d2DdP2_flipped, P, props);
-        d2DdP2 = d2DdP2_flipped.block(6, 6, 6, 6);
-    }
+                               const Plane& p_b);
 
-    // Plane - Sphere
-    static double compute_D(const Plane& p_a, const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        return PlaneVsSphere::compute_D(P, props);
-    }
+    /**
+     * @}
+     */ // end of group CapsuleVsPlane
+
+    /**
+     * @defgroup PlaneVsSphere
+     * @brief %API for %Plane vs. %Sphere interactions.
+     * 
+     * This module contains all helpers for %Plane vs. %Sphere interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between a plane and a sphere.
+     * 
+     * @param p_a The plane
+     * @param s_b The sphere
+     * @return The distance between both primitives.
+     */
+    static double compute_D(const Plane& p_a, const Sphere& s_b);
+
+    /**
+     * @brief Computes the *full* derivative of the distance between a plane and a sphere.
+     * 
+     * The derivative is of size 9,
+     * meaning it is taken with respect to the parameters of the plane and the position (plane position and normal, sphere position, a total of 9 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the plane and the sphere.
+     * @param p_a The plane
+     * @param s_b The sphere
+     */
     static void compute_dDdP(Vector9d& dDdP, const Plane& p_a,
-                             const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        PlaneVsSphere::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
+
+    /**
+     * @brief Computes the *full* second derivative of the distance between a plane and a sphere.
+     * 
+     * The derivative is of size 9 by 9,
+     * meaning it is taken with respect to the parameters of the plane and the sphere (plane position and normal, sphere position, a total of 9 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the plane and the sphere.
+     * @param p_a The plane
+     * @param s_b The sphere
+     */
     static void compute_d2DdP2(Matrix9d& d2DdP2, const Plane& p_a,
-                               const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        PlaneVsSphere::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
+
+    /**
+     * @brief Computes the *partial* derivative of the distance between a plane and a sphere.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the plane and the sphere.
+     * @param p_a The plane
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the plane.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Plane& p_a,
-                             const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        PlaneVsSphere::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a plane and a sphere.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the plane and the sphere.
+     * @param p_a The plane
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the plane.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Plane& p_a,
-                               const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        PlaneVsSphere::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
+
+    /**
+     * @brief Computes the *partial* derivative of the distance between a plane and a sphere.
+     * 
+     * The derivative is of size 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the plane and the sphere.
+     * @param p_a The plane
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the sphere.
+     */
     static void compute_dDdP(Vector3d& dDdP, const Plane& p_a,
-                             const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        PlaneVsSphere::compute_dDdP(dDdP, P, props);
-    }
+                             const Sphere& s_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a plane and a sphere.
+     * 
+     * The derivative is of size 3 by 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the plane and the sphere.
+     * @param p_a The plane
+     * @param s_b The sphere
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the sphere.
+     */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Plane& p_a,
-                               const Sphere& s_b) {
-        READ_PLANE_SPHERE_DATA(p_a, s_b);
-        PlaneVsSphere::compute_d2DdP2(d2DdP2, P, props);
-    }
+                               const Sphere& s_b);
 
-    // Sphere Vs. Plane
-    static double compute_D(const Sphere& s_a, const Plane& p_b) {
-        READ_PLANE_SPHERE_DATA(p_b, s_a);
-        return PlaneVsSphere::compute_D(P, props);
-    }
+    /**
+     * @}
+     */ // end of group PlaneVsSphere
+
+    /**
+     * @defgroup SphereVsPlane
+     * @brief %API for %Sphere vs. %Plane interactions.
+     * 
+     * This module contains all helpers for %Sphere vs. %Plane interactions.
+     * @{
+     */
+
+    /** 
+     * @brief Computes the distance between a sphere and a plane.
+     * 
+     * @param s_a The sphere
+     * @param p_b The plane
+     * @return The distance between both primitives.
+     */
+    static double compute_D(const Sphere& s_a, const Plane& p_b);
+
+    /**
+     * @brief Computes the *full* derivative of the distance between a sphere and a plane.
+     * 
+     * The derivative is of size 9,
+     * meaning it is taken with respect to the parameters of the sphere and the plane (sphere position, plane position and normal, a total of 9 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the sphere and the plane.
+     * @param s_a The sphere
+     * @param p_b The plane
+     */
     static void compute_dDdP(Vector9d& dDdP, const Sphere& s_a,
-                             const Plane& p_b) {
-        READ_PLANE_SPHERE_DATA(p_b, s_a);
-        Vector9d dDdP_flipped;
-        PlaneVsSphere::compute_dDdP(dDdP_flipped, P, props);
-        dDdP.head(3) = dDdP_flipped.tail(3);
-        dDdP.tail(6) = dDdP_flipped.head(6);
-    }
-    static void compute_d2DdP2(Matrix9d& d2DdP2, const Sphere& s_a,
-                               const Plane& p_b) {
-        READ_PLANE_SPHERE_DATA(p_b, s_a);
-        PlaneVsSphere::compute_d2DdP2(d2DdP2, P, props);
-        Matrix9d d2DdP2_flipped;
-        PlaneVsSphere::compute_d2DdP2(d2DdP2_flipped, P, props);
-        d2DdP2.block(0, 0, 3, 3) = d2DdP2_flipped.block(6, 6, 3, 3);
-        d2DdP2.block(3, 3, 6, 6) = d2DdP2_flipped.block(0, 0, 6, 6);
+                             const Plane& p_b);
 
-        d2DdP2.block(0, 3, 3, 6) = d2DdP2_flipped.block(6, 0, 3, 6);
-        d2DdP2.block(3, 0, 6, 3) = d2DdP2_flipped.block(0, 6, 6, 3);
-    }
+    /**
+     * @brief Computes the *full* second derivative of the distance between a sphere and a plane.
+     * 
+     * The derivative is of size 9 by 9,
+     * meaning it is taken with respect to the parameters of the sphere and the plane (sphere position, plane position and normal, a total of 9 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for sphere and the plane.
+     * @param s_a The sphere
+     * @param p_b The plane
+     */
+    static void compute_d2DdP2(Matrix9d& d2DdP2, const Sphere& s_a,
+                               const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* derivative of the distance between a sphere and a plane.
+     * 
+     * The derivative is of size 6,
+     * meaning it is taken with respect to the parameters of the plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the sphere and the plane.
+     * @param s_a The sphere
+     * @param p_b The plane
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the plane.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Sphere& s_a,
-                             const Plane& p_b) {
-        compute_dDdP(dDdP, p_b, s_a);  // can call this one
-    }
+                             const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a sphere and a plane.
+     * 
+     * The derivative is of size 6 by 6,
+     * meaning it is taken with respect to the parameters of the plane (position and normal, a total of 6 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the sphere and the plane.
+     * @param s_a The sphere
+     * @param p_b The plane
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the plane.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Sphere& s_a,
-                               const Plane& p_b) {
-        compute_d2DdP2(d2DdP2, p_b, s_a);  // can call this one
-    }
+                               const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* derivative of the distance between a sphere and a plane.
+     * 
+     * The derivative is of size 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] dDdP The first derivative \f$ \frac{dD}{dP} \f$ where D is the distance and P is the vector of parameters for the sphere and the plane.
+     * @param s_a The sphere
+     * @param p_b The plane
+     * 
+     * @attention This is not the *full* derivative, only the segment which belong to the sphere.
+     */
     static void compute_dDdP(Vector3d& dDdP, const Sphere& s_a,
-                             const Plane& p_b) {
-        compute_dDdP(dDdP, p_b, s_a);  // can call this one
-    }
+                             const Plane& p_b);
+
+    /**
+     * @brief Computes the *partial* second derivative of the distance between a sphere and a plane.
+     * 
+     * The derivative is of size 3 by 3,
+     * meaning it is taken with respect to the parameters of the sphere (position, a total of 3 degrees of freedom).
+     * 
+     * @param[out] d2DdP2 The second derivative \f$ \frac{d^2D}{dP^2} \f$ where D is the distance and P is the vector of parameters for the sphere and the plane.
+     * @param s_a The sphere
+     * @param p_b The plane
+     * 
+     * @attention This is not the *full* derivative, only the block which belong to the sphere.
+     */
     static void compute_d2DdP2(Matrix3d& d2DdP2, const Sphere& s_a,
-                               const Plane& p_b) {
-        compute_d2DdP2(d2DdP2, p_b, s_a);  // can call this one
-    }
+                               const Plane& p_b);
+
+    /**
+     * @}
+     */ // end of group SphereVsPlane
 
     /**
      * @brief Compute the distance for a given pair.
@@ -683,37 +832,7 @@ public:
      * @param[in] p_b The second primitive
      * @return The distance between both primitives.
      */
-    static double compute_D(const primitive_t& p_a, const primitive_t& p_b) {
-        return std::visit(
-            overloaded{[&](const Sphere& s_a, const Sphere& s_b) {
-                           return compute_D(s_a, s_b);
-                       },
-                       [&](const Sphere& s_a, const Capsule& c_b) {
-                           return compute_D(s_a, c_b);
-                       },
-                       [&](const Capsule& c_a, const Sphere& s_b) {
-                           return compute_D(c_a, s_b);
-                       },
-                       [&](const Capsule& c_a, const Capsule& c_b) {
-                           return compute_D(c_a, c_b);
-                       },
-                       [&](const Plane& p_a, const Plane& p_b) {
-                           return compute_D(p_a, p_b);
-                       },
-                       [&](const Plane& p_a, const Capsule& c_b) {
-                           return compute_D(p_a, c_b);
-                       },
-                       [&](const Capsule& c_a, const Plane& p_b) {
-                           return compute_D(c_a, p_b);
-                       },
-                       [&](const Plane& p_a, const Sphere& s_b) {
-                           return compute_D(p_a, s_b);
-                       },
-                       [&](const Sphere& s_a, const Plane& p_b) {
-                           return compute_D(s_a, p_b);
-                       }},
-            p_a, p_b);
-    }
+    static double compute_D(const primitive_t& p_a, const primitive_t& p_b);
 
     /**
      * @brief Computes the *full* derivative of the distance for a given pair.
@@ -723,54 +842,7 @@ public:
      * @param[in] p_b The second primitive
      */
     static void compute_dDdP(VectorXd& dDdP, const primitive_t& p_a,
-                             const primitive_t& p_b) {
-        std::visit(overloaded{[&](const Sphere& s_a, const Sphere& s_b) {
-                                  Vector6d dDdP_full;
-                                  compute_dDdP(dDdP_full, s_a, s_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Sphere& s_a, const Capsule& c_b) {
-                                  Vector9d dDdP_full;
-                                  compute_dDdP(dDdP_full, s_a, c_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Capsule& c_a, const Sphere& s_b) {
-                                  Vector9d dDdP_full;
-                                  compute_dDdP(dDdP_full, c_a, s_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Capsule& c_a, const Capsule& c_b) {
-                                  Vector12d dDdP_full;
-                                  compute_dDdP(dDdP_full, c_a, c_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Plane& p_a, const Plane& p_b) {
-                                  Vector12d dDdP_full;
-                                  compute_dDdP(dDdP_full, p_a, p_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Plane& p_a, const Capsule& c_b) {
-                                  Vector12d dDdP_full;
-                                  compute_dDdP(dDdP_full, p_a, c_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Capsule& c_a, const Plane& p_b) {
-                                  Vector12d dDdP_full;
-                                  compute_dDdP(dDdP_full, c_a, p_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Plane& p_a, const Sphere& s_b) {
-                                  Vector9d dDdP_full;
-                                  compute_dDdP(dDdP_full, p_a, s_b);
-                                  dDdP = dDdP_full;
-                              },
-                              [&](const Sphere& s_a, const Plane& p_b) {
-                                  Vector9d dDdP_full;
-                                  compute_dDdP(dDdP_full, s_a, p_b);
-                                  dDdP = dDdP_full;
-                              }},
-                   p_a, p_b);
-    }
+                             const primitive_t& p_b);
 
     /**
      * @brief Computes the *full* second derivative of the distance for a given pair.
@@ -780,54 +852,7 @@ public:
      * @param[in] p_b The second primitive
      */
     static void compute_d2DdP2(MatrixXd& d2DdP2, const primitive_t& p_a,
-                               const primitive_t& p_b) {
-        std::visit(overloaded{[&](const Sphere& s_a, const Sphere& s_b) {
-                                  Matrix6d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, s_a, s_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Sphere& s_a, const Capsule& c_b) {
-                                  Matrix9d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, s_a, c_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Capsule& c_a, const Sphere& s_b) {
-                                  Matrix9d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, c_a, s_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Capsule& c_a, const Capsule& c_b) {
-                                  Matrix12d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, c_a, c_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Plane& p_a, const Plane& p_b) {
-                                  Matrix12d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, p_a, p_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Plane& p_a, const Capsule& c_b) {
-                                  Matrix12d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, p_a, c_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Capsule& c_a, const Plane& p_b) {
-                                  Matrix12d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, c_a, p_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Plane& p_a, const Sphere& s_b) {
-                                  Matrix9d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, p_a, s_b);
-                                  d2DdP2 = d2DdP2_full;
-                              },
-                              [&](const Sphere& s_a, const Plane& p_b) {
-                                  Matrix9d d2DdP2_full;
-                                  compute_d2DdP2(d2DdP2_full, s_a, p_b);
-                                  d2DdP2 = d2DdP2_full;
-                              }},
-                   p_a, p_b);
-    }
+                               const primitive_t& p_b);
 
     /**
      * @brief Compute the distance for a given pair.
@@ -837,9 +862,7 @@ public:
      * @return The distance between both primitives.
      */
     static double compute_D(const pair_t& pair,
-                            const std::vector<primitive_t>& primitives) {
-        return compute_D(primitives.at(pair.first), primitives.at(pair.second));
-    }
+                            const std::vector<primitive_t>& primitives);
 
     /**
      * @brief Computes the *full* derivative of the distance for a given pair.
@@ -849,10 +872,7 @@ public:
      * @param[in] primitives A vector of primitives, where the indices from the pair should apply to.
      */
     static void compute_dDdP(VectorXd& dDdP, const pair_t& pair,
-                             const std::vector<primitive_t>& primitives) {
-        compute_dDdP(dDdP, primitives.at(pair.first),
-                     primitives.at(pair.second));
-    }
+                             const std::vector<primitive_t>& primitives);
 
     /**
      * @brief Computes the *full* second derivative of the distance for a given pair.
@@ -862,12 +882,7 @@ public:
      * @param[in] primitives A vector of primitives, where the indices from the pair should apply to.
      */
     static void compute_d2DdP2(MatrixXd& d2DdP2, const pair_t& pair,
-                               const std::vector<primitive_t>& primitives) {
-        compute_d2DdP2(d2DdP2, primitives.at(pair.first),
-                       primitives.at(pair.second));
-    }
+                               const std::vector<primitive_t>& primitives);
 };
 
 }  // namespace DCA
-
-#endif

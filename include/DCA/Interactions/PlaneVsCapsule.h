@@ -1,85 +1,81 @@
 #pragma once
 
-#include <DCA/Autodiff/AD_PlaneToCapsule.h>
-#include <DCA/Interactions/PlaneVsSphere.h>
 #include <DCA/Utils/FD.h>
 
 namespace DCA {
 
+/**
+ * @brief This helper is used to compute Plane vs. Capsule interactions.
+ */
 class PlaneVsCapsule {
 public:
-    static double compute_D(const Vector12d& P, const Vector1d& props) {
-        Vector3d Pt_line, Pt_plane;
-        computeClosestPoints(P, Pt_plane, Pt_line);
-        return (Pt_line - Pt_plane).norm() - props(0);  // minus caps. radius
-    }
+    /**
+     * @brief Compute the distance between a plane and a capsule.
+     * @param[in] P The parameters for the plane and the capsule, that is the degrees of freedom (position and normal of the plane, start- and end-positions for the capsule), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the capsule.
+     * @return The distance between the plane and the capsule.
+     */
+    static double compute_D(const Vector12d& P, const Vector1d& props);
 
     FD_CHECK_dDdP(6, 12, 1, 0, "PlaneVsCapsule - dDdP_6");
+    /**
+     * @brief Compute the *partial* derivative of the distance between a plane and a capsule with respect to P.
+     * @param[out] dDdP The *partial* derivative \f$\frac{dD}{dP}\f$, that is with respect to the parameters of the plane.
+     * @param[in] P The parameters for the plane and the capsule, that is the degrees of freedom (position and normal of the plane, start- and end-positions for the capsule), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the capsule.
+     */
     static void compute_dDdP(Vector6d& dDdP, const Vector12d& P,
-                             const Vector1d& props) {
-        Vector12d dDdP_full;
-        PlaneToCapsuleDistance_CodeGen::AD_PlaneToCapsuleDistanceGradient(
-            P, props, curveScale(), sigScale(), dDdP_full);
-        dDdP = dDdP_full.head(6);
-    }
+                             const Vector1d& props);
 
     FD_CHECK_dDdP(12, 12, 1, 0, "PlaneVsCapsule - dDdP_12");
+    /**
+     * @brief Compute the *full* derivative of the distance between a plane and a capsule with respect to P.
+     * @param[out] dDdP The *full* derivative \f$\frac{dD}{dP}\f$.
+     * @param[in] P The parameters for the plane and the capsule, that is the degrees of freedom (position and normal of the plane, start- and end-positions for the capsule), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the capsule.
+     */
     static void compute_dDdP(Vector12d& dDdP, const Vector12d& P,
-                             const Vector1d& props) {
-        PlaneToCapsuleDistance_CodeGen::AD_PlaneToCapsuleDistanceGradient(
-            P, props, curveScale(), sigScale(), dDdP);
-    }
+                             const Vector1d& props);
 
     FD_CHECK_d2DdP2(12, 12, 1, 0, "PlaneVsCapsule - d2DdP2_12");
+    /**
+     * @brief Compute the *full* second derivative of the distance between a plane and a capsule with respect to P.
+     * @param[out] d2DdP2 The *full* second derivative \f$\frac{d^2D}{dP^2}\f$.
+     * @param[in] P The parameters for the plane and the capsule, that is the degrees of freedom (position and normal of the plane, start- and end-positions for the capsule), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the capsule.
+     */
     static void compute_d2DdP2(Matrix12d& d2DdP2, const Vector12d& P,
-                               const Vector1d& props) {
-        PlaneToCapsuleDistance_CodeGen::AD_PlaneToCapsuleDistanceHessian(
-            P, props, curveScale(), sigScale(), d2DdP2);
-    }
+                               const Vector1d& props);
 
     FD_CHECK_d2DdP2(6, 12, 1, 0, "PlaneVsCapsule - d2DdP2_6");
+    /**
+     * @brief Compute the *partial* second derivative of the distance between a plane and a capsule with respect to P.
+     * @param[out] d2DdP2 The *partial* second derivative \f$\frac{d^2D}{dP^2}\f$, that is with respect to the parameters of the plane.
+     * @param[in] P The parameters for the plane and the capsule, that is the degrees of freedom (position and normal of the plane, start- and end-positions for the capsule), stacked.
+     * @param[in] props The properties of both primitives, that is the radius of the capsule.
+     */
     static void compute_d2DdP2(Matrix6d& d2DdP2, const Vector12d& P,
-                               const Vector1d& props) {
-        Matrix12d d2DdP2_full;
-        PlaneToCapsuleDistance_CodeGen::AD_PlaneToCapsuleDistanceHessian(
-            P, props, curveScale(), sigScale(), d2DdP2_full);
-        d2DdP2 = d2DdP2_full.block(0, 0, 6, 6);
-    }
+                               const Vector1d& props);
 
 public:
     /**
-     * @param P plane pos, plane normal, caps start, caps end
-     */
+     * @brief Compute the closest point on the plane and on the capsule.
+     * @param[in] P The parameters for the plane and the capsule, that is the degrees of freedom (position and normal of the plane, start- and end-positions for the capsule), stacked.
+     * @param[out] Pt_plane 
+     * @param[out] Pt_line 
+    */
     static void computeClosestPoints(const Vector12d& P, Vector3d& Pt_plane,
-                                     Vector3d& Pt_line) {
-        Vector3d P1 = P.segment(6, 3);  // caps start
-        Vector3d P2 = P.segment(9, 3);  // caps end
-        Vector3d P1_proj =
-            PlaneVsSphere::getProjectionOfPoint(P.segment(0, 6), P1);
-        Vector3d P2_proj =
-            PlaneVsSphere::getProjectionOfPoint(P.segment(0, 6), P2);
-
-        double length = (P1 - P2).norm();
-        double length_1 = (P1 - P1_proj).norm();
-        double length_2 = (P2 - P2_proj).norm();
-
-        double t = 0.5 + curveScale() * length * (length_1 - length_2) /
-                             (length_1 + length_2);
-
-        t = sigmoid(t, sigScale());
-        Pt_line = P1 + t * (P2 - P1);
-        Pt_plane =
-            PlaneVsSphere::getProjectionOfPoint(P.segment(0, 6), Pt_line);
-    }
-    static double sigScale() {
-        static double sig_scale = 5.;
-        return sig_scale;
-    }
-
-    static double curveScale() {
-        static double curve_scale = 10.;
-        return curve_scale;
-    }
+                                     Vector3d& Pt_line);
+    /**
+     * @brief Helper to push values to the center.
+     * @return A constant, 5.
+     */
+    static double sigScale();
+    /**
+     * @brief Helper to push values to the center.
+     * @return A constant, 10.
+     */
+    static double curveScale();
 };
 
 }  // namespace DCA
