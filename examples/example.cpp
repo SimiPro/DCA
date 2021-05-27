@@ -10,7 +10,7 @@
 
 // After linking the library, it can be included with the following lines:
 #include <DCA/API.h>
-#include <DCA/pair.h>
+#include <DCA/Pair.h>
 
 int main(int argc, char const* argv[]) {
     using namespace DCA;

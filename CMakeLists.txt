@@ -17,24 +17,26 @@ project("DCA" VERSION 0.1
              HOMEPAGE_URL "https://github.com/SimiPro/DCA")
 
 set(CMAKE_CXX_STANDARD 20)
+file(GLOB DCA_SOURCES "src/*cpp")
+file(GLOB_RECURSE DCA_HEADERS "include/DCA/*.h")
 
 option(DCA_BUILD_DEV_TOOLS "Build DEV tools (like FD and example app)" OFF)
 
 # These options are only available if we build dev tools (finite difference)
 cmake_dependent_option(DCA_BUILD_EXAMPLES "Build examples" ON DCA_BUILD_DEV_TOOLS OFF)
 
-add_library(${PROJECT_NAME} INTERFACE)
+add_library(${PROJECT_NAME} ${DCA_SOURCES} ${DCA_HEADERS})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 
 if(DCA_BUILD_DEV_TOOLS)
-  target_compile_definitions(${PROJECT_NAME} INTERFACE -DDCA_DEV_TOOLS=1)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC -DDCA_DEV_TOOLS=1)
 else(DCA_BUILD_DEV_TOOLS)
-  target_compile_definitions(${PROJECT_NAME} INTERFACE -DDCA_DEV_TOOLS=0)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC -DDCA_DEV_TOOLS=0)
 endif(DCA_BUILD_DEV_TOOLS)
 
 target_include_directories(
   ${PROJECT_NAME}
-  INTERFACE $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
+  PUBLIC $<BUILD_INTERFACE:${${PROJECT_NAME}_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
 find_package (Eigen3 3.3 NO_MODULE)
@@ -55,8 +57,8 @@ if(NOT TARGET Eigen3::Eigen)
   target_include_directories(eigen INTERFACE ${eigen_SOURCE_DIR})
 endif(NOT TARGET Eigen3::Eigen)
 
-target_compile_features(${PROJECT_NAME} INTERFACE cxx_std_20)
-target_link_libraries(${PROJECT_NAME} INTERFACE Eigen3::Eigen)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
 
 if(${DCA_BUILD_EXAMPLES})
   add_subdirectory(examples)

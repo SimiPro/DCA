@@ -1,11 +1,10 @@
-#ifndef __DCA_NEWTON_H__
-#define __DCA_NEWTON_H__
+#pragma once
+
+#include <DCA/Utils/Utils.h>
 
 #include <Eigen/Dense>
 #include <cmath>  // for std::isfinite
 #include <iostream>
-
-#include "utils.h"
 
 namespace DCA {
 
@@ -17,9 +16,10 @@ namespace DCA {
 template <int SizeP, int SizeX>
 class NewtonObjective {
 public:
-    using P_v = Eigen::Matrix<double, SizeP, 1>; ///< Helper: Parameter vector
-    using X_v = Eigen::Matrix<double, SizeX, 1>; ///< Helper: Solution vector
-    using X_m = Eigen::Matrix<double, SizeX, SizeX>; ///< Helper: Solution Matrix (derivative)
+    using P_v = Eigen::Matrix<double, SizeP, 1>;  ///< Helper: Parameter vector
+    using X_v = Eigen::Matrix<double, SizeX, 1>;  ///< Helper: Solution vector
+    using X_m = Eigen::Matrix<double, SizeX,
+                              SizeX>;  ///< Helper: Solution Matrix (derivative)
 
     /**
      * @brief Computes the Objective value of this.
@@ -89,9 +89,10 @@ public:
 template <int SizeP, int SizeX>
 class NewtonOptimizer {
 public:
-    using P_v = Eigen::Matrix<double, SizeP, 1>; ///< Helper: Parameter vector
-    using X_v = Eigen::Matrix<double, SizeX, 1>; ///< Helper: Solution vector
-    using X_m = Eigen::Matrix<double, SizeX, SizeX>; ///< Helper: Solution Matrix (derivative)
+    using P_v = Eigen::Matrix<double, SizeP, 1>;  ///< Helper: Parameter vector
+    using X_v = Eigen::Matrix<double, SizeX, 1>;  ///< Helper: Solution vector
+    using X_m = Eigen::Matrix<double, SizeX,
+                              SizeX>;  ///< Helper: Solution Matrix (derivative)
 
     /**
      * @brief Create a %NewtonOptimizer
@@ -246,5 +247,3 @@ private:
 };
 
 }  // namespace DCA
-
-#endif /* __DCA_NEWTON_H__ */

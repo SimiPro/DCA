@@ -1,9 +1,8 @@
-#ifndef __DCA_PRIMITIVES_H__
-#define __DCA_PRIMITIVES_H__
+#pragma once
+
+#include <DCA/Utils/Utils.h>
 
 #include <variant>
-
-#include "utils.h"
 
 namespace DCA {
 
@@ -42,11 +41,19 @@ struct Capsule {
     double radius;           ///< The internal storage for the radius.
 };
 
+struct Plane {
+    Plane(const Vector3d& point, const Vector3d& normal)
+        : point(point), normal(normal.normalized()) {}
+    Plane(const Vector3d& p1, const Vector3d& p2, const Vector3d& p3)
+        : point(p1), normal((p2 - p1).cross(p3 - p2).normalized()) {}
+    Vector3d point;
+    Vector3d normal;
+};
+
 /**
  * @brief All possible primitives.
  * This helper holds a variant of all possible primitives supported by this library.
  */
-using primitive_t = std::variant<Sphere, Capsule>;
+using primitive_t = std::variant<Sphere, Capsule, Plane>;
 
 }  // namespace DCA
-#endif /* __DCA_PRIMITIVES_H__ */
