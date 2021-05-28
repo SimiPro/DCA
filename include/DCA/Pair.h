@@ -31,7 +31,12 @@ public:
 class PermutationPairGenerator : public PairGenerator {
 public:
     /**
-     * @copydoc PairGenerator::generate
+     * @brief This function generates all pairs given the primitives.
+     * 
+     * The returned vector consists of pairs, where each pair holds two numbers:
+     * The indices of the corresponding primitives which were given.
+     * @param[in] primitives All primitives to generate the pairs from.
+     * @return A vector of pairs of indices, where each index corresponds to a primitive in the primitives vector.
      */
     virtual std::vector<pair_t> generate(
         const std::vector<primitive_t> &primitives) const override;
@@ -51,7 +56,12 @@ public:
     NeighborsPairGenerator(const double &radius);
 
     /**
-     * @copydoc PairGenerator::generate
+     * @brief This function generates the pairs given the primitives, where the pairs are in a certain distance from each other.
+     * 
+     * The returned vector consists of pairs, where each pair holds two numbers:
+     * The indices of the corresponding primitives which were given.
+     * @param[in] primitives All primitives to generate the pairs from.
+     * @return A vector of pairs of indices, where each index corresponds to a primitive in the primitives vector.
      */
     virtual std::vector<pair_t> generate(
         const std::vector<primitive_t> &primitives)
