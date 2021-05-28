@@ -3,6 +3,8 @@
 #include <DCA/Utils/Primitives.h>
 
 namespace DCA {
+
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 /**
  * @brief This is the base class for all generators.
  */
@@ -19,6 +21,7 @@ public:
     virtual std::vector<pair_t> generate(
         const std::vector<primitive_t> &primitives) const = 0;
 };
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 /**
  * @brief This generator creates all possible permutations of pairs.
@@ -35,7 +38,7 @@ public:
 };
 
 /**
- * This generator computes the pairs which are in a certain threshold from each other.
+ * @brief This generator computes the pairs which are in a certain threshold from each other.
  * It does so by computing a single position for each primitive and selecting
  * pairs based on the distance.
  */
