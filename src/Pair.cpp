@@ -1,5 +1,5 @@
-#include <DCA/Pair.h>
 #include <DCA/Interactions/PlaneVsSphere.h>
+#include <DCA/Pair.h>
 
 namespace DCA {
 
@@ -77,6 +77,19 @@ std::vector<pair_t> NeighborsPairGenerator::generate(
                                                                 positions[j]);
                         // now check distance
                         if ((pt_on_plane - positions[j]).squaredNorm() <
+                            m_radius2) {
+                            ret.push_back({i, j});
+                        }
+                    },
+                    [&](const primitive_t &other, const Plane &p) {
+                        // map pos. of other to the plane
+                        Vector6d P_plane;
+                        P_plane << p.point, p.normal;
+                        Vector3d pt_on_plane =
+                            PlaneVsSphere::getProjectionOfPoint(P_plane,
+                                                                positions[i]);
+                        // now check distance
+                        if ((pt_on_plane - positions[i]).squaredNorm() <
                             m_radius2) {
                             ret.push_back({i, j});
                         }
