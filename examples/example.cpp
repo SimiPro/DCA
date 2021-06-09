@@ -32,8 +32,6 @@ int main(int argc, char const* argv[]) {
             std::cout << p.first << "/" << p.second << std::endl;
     }
 
-#if BUILD_COMPACT_N_SEARCH
-
     NeighborsPairGenerator npg(2.);
     auto pairs_neighbors = npg.generate(primitives);
 
@@ -42,8 +40,6 @@ int main(int argc, char const* argv[]) {
     for(auto& p : pairs_neighbors) {
             std::cout << p.first << "/" << p.second << std::endl;
     }
-
-#endif
 
     // Temporary storage for the gradient and hessian
     VectorXd grad;

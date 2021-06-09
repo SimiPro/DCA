@@ -68,7 +68,7 @@ public:
         const override;  // namespace DCA
 
 private:
-    double m_radius2;  ///< The squared radius
+    double m_radius;  ///< The radius
 };
 
 }  // namespace DCA
