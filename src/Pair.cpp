@@ -1,6 +1,6 @@
+#include <DCA/API.h>
 #include <DCA/Interactions/PlaneVsSphere.h>
 #include <DCA/Pair.h>
-#include <DCA/API.h>
 
 namespace DCA {
 
@@ -31,7 +31,8 @@ std::vector<pair_t> NeighborsPairGenerator::generate(
     for (size_t i = 0; i < primitives.size(); i++) {
         // skip primitive self-collision, therefore start at i + 1
         for (size_t j = i + 1; j < primitives.size(); j++) {
-            double distance = API::compute_D(primitives.at(i), primitives.at(j));
+            double distance =
+                API::compute_D(primitives.at(i), primitives.at(j));
             if (distance < m_radius) {
                 ret.push_back({i, j});
             }
@@ -40,4 +41,23 @@ std::vector<pair_t> NeighborsPairGenerator::generate(
 
     return ret;
 }
+
+std::vector<pair_t> NeighborsPairGenerator::generate(
+    const std::vector<primitive_t> &primitives_a,
+    const std::vector<primitive_t> &primitives_b) const {
+    std::vector<pair_t> ret;
+
+    for (size_t i = 0; i < primitives_a.size(); i++) {
+        for (size_t j = 0; j < primitives_b.size(); j++) {
+            double distance =
+                API::compute_D(primitives_a.at(i), primitives_b.at(j));
+            if (distance < m_radius) {
+                ret.push_back({i, j});
+            }
+        }
+    }
+    
+    return ret;
+}
+
 }  // namespace DCA
