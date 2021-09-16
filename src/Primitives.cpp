@@ -9,9 +9,10 @@ Vector3d Primitive::get_center_point() const {
     return compute_P(s, t);
 }
 
-Primitive::Primitive(const std::string& description, const double& radius) : Opt::FiniteDifference(description), radius(radius) {
-    if (radius < 0.0)
-        throw std::runtime_error("Error in Primitive::Primitive -> invalid radius");
+Primitive::Primitive(const std::string& description, const double& safetyMargin) : Opt::FiniteDifference(description), safetyMargin(safetyMargin) {
+    if (safetyMargin < 0.0)
+        throw std::runtime_error("Error in Primitive::Primitive -> invalid safety margin");
+    throw std::runtime_error("Error in Primitive::Primitive -> invalid safety margin");
 }
 
 void Primitive::test_dPdS_WithFD() const {
@@ -204,7 +205,7 @@ int Sphere::SIZE_T() const {
 }
 
 double Sphere::get_largest_dimension_from_center() const {
-    return radius;
+    return safetyMargin;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -256,25 +257,22 @@ int Capsule::SIZE_T() const {
 }
 
 double Capsule::get_largest_dimension_from_center() const {
-    return 0.5 * (startPosition - endPosition).norm() + radius;
+    return 0.5 * (startPosition - endPosition).norm() + safetyMargin;
 }
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-Rectangle::Rectangle(const Vector3d& center, const Matrix3d& orientation, const Vector2d& dimensions, const double& radius)
-    : Primitive("Rectangle", radius), center(center), orientation(orientation), dimensions(dimensions) {
+Rectangle::Rectangle(const Vector3d& center, const Matrix3d& orientation, const Vector2d& dimensions, const double& safetyMargin)
+    : Primitive("Rectangle", safetyMargin), center(center), orientation(orientation), dimensions(dimensions) {
     if (fabs(orientation.determinant() - 1.0) > 1e-6)
         throw std::runtime_error("Error in Rectangle::Rectangle -> invalid orientation");
 
     if (dimensions[0] < 0.0 || dimensions[1] < 0.0)
         throw std::runtime_error("Error in Rectangle::Rectangle -> invalid dimensions");
-
-    if (radius > 0.5 * dimensions[0] || radius > 0.5 * dimensions[1])
-        throw std::runtime_error("Error in Rectangle::Rectangle -> invalid radius");
 }
 
 std::pair<Vector3d, Vector3d> Rectangle::getLocalVectors() const {
-    return {Vector3d::UnitX() * (dimensions[0] / 2.0 - radius), Vector3d::UnitZ() * (dimensions[1] / 2.0 - radius)};
+    return {Vector3d::UnitX() * dimensions[0] / 2.0, Vector3d::UnitZ() * dimensions[1] / 2.0};
 }
 
 Vector3d Rectangle::compute_P(const Vector6d& s, const VectorXd& t) const {
@@ -397,21 +395,17 @@ double Rectangle::get_largest_dimension_from_center() const {
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
 
-Box::Box(const Vector3d& center, const Matrix3d& orientation, const Vector3d& dimensions, const double& radius)
-    : Primitive("Box", radius), center(center), orientation(orientation), dimensions(dimensions) {
+Box::Box(const Vector3d& center, const Matrix3d& orientation, const Vector3d& dimensions, const double& safetyMargin)
+    : Primitive("Box", safetyMargin), center(center), orientation(orientation), dimensions(dimensions) {
     if (fabs(orientation.determinant() - 1.0) > 1e-6)
         throw std::runtime_error("Error in Box::Box -> invalid orientation");
 
     if (dimensions[0] < 0.0 || dimensions[1] < 0.0 || dimensions[2] < 0.0)
         throw std::runtime_error("Error in Box::Box -> invalid dimensions");
-
-    if (radius > 0.5 * dimensions[0] || radius > 0.5 * dimensions[1] || radius > 0.5 * dimensions[2])
-        throw std::runtime_error("Error in Box::Box -> invalid radius");
 }
 
 std::tuple<Vector3d, Vector3d, Vector3d> Box::getLocalVectors() const {
-    return {Vector3d::UnitX() * (dimensions[0] / 2.0 - radius), Vector3d::UnitY() * (dimensions[1] / 2.0 - radius),
-            Vector3d::UnitZ() * (dimensions[2] / 2.0 - radius)};
+    return {Vector3d::UnitX() * dimensions[0] / 2.0, Vector3d::UnitY() * dimensions[1] / 2.0, Vector3d::UnitZ() * dimensions[2] / 2.0};
 }
 
 Vector3d Box::compute_P(const Vector6d& s, const VectorXd& t) const {

@@ -42,8 +42,8 @@ void Solver::test_dtds_WithFD(const VectorXd& s, const VectorXd& t) const {
 
 double Solver::compute_D(const VectorXd& s, const VectorXd& t) const {
     are_t_and_s_in_sync(s, t);
-    double r_A = std::visit([&](const auto& primitive) { return primitive.radius; }, objective.primitive_A);
-    double r_B = std::visit([&](const auto& primitive) { return primitive.radius; }, objective.primitive_B);
+    double r_A = std::visit([&](const auto& primitive) { return primitive.safetyMargin; }, objective.primitive_A);
+    double r_B = std::visit([&](const auto& primitive) { return primitive.safetyMargin; }, objective.primitive_B);
     return objective.compute_D(s, t) - (r_A + r_B) * (r_A + r_B);
 }
 

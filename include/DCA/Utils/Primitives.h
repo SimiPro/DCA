@@ -15,7 +15,7 @@ namespace DCA {
 
 class Primitive : public Opt::FiniteDifference {
 public:
-    Primitive(const std::string& description, const double& radius);
+    Primitive(const std::string& description, const double& safetyMargin);
     virtual ~Primitive() {}
 
     //Compute point on primitive (and its derivatives) based on s and t
@@ -60,7 +60,7 @@ private:
     VectorXd get_t_forFD() const;
 
 public:
-    double radius;
+    double safetyMargin;
 };
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -122,7 +122,7 @@ public:
  */
 class Rectangle : public Primitive {
 public:
-    Rectangle(const Vector3d& center, const Matrix3d& orientation, const Vector2d& dimensions, const double& radius);
+    Rectangle(const Vector3d& center, const Matrix3d& orientation, const Vector2d& dimensions, const double& safetyMargin = 0.001);
     ~Rectangle() {}
 
     Vector3d compute_P(const Vector6d& s, const VectorXd& t) const override;
@@ -153,7 +153,7 @@ public:
  */
 class Box : public Primitive {
 public:
-    Box(const Vector3d& center, const Matrix3d& orientation, const Vector3d& dimensions, const double& radius);
+    Box(const Vector3d& center, const Matrix3d& orientation, const Vector3d& dimensions, const double& safetyMargin = 0.001);
     ~Box() {}
 
     Vector3d compute_P(const Vector6d& s, const VectorXd& t) const override;

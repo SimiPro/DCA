@@ -20,19 +20,8 @@ set(CMAKE_CXX_STANDARD 20)
 file(GLOB DCA_SOURCES "src/*cpp")
 file(GLOB_RECURSE DCA_HEADERS "include/DCA/*.h")
 
-option(DCA_BUILD_DEV_TOOLS "Build DEV tools (like FD and example app)" ON) #ToDo: Turn off per default!
-
-# These options are only available if we build dev tools (finite difference)
-cmake_dependent_option(DCA_BUILD_EXAMPLES "Build examples" ON DCA_BUILD_DEV_TOOLS ON) #ToDo: Turn off per default!
-
 add_library(${PROJECT_NAME} ${DCA_SOURCES} ${DCA_HEADERS})
 add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-
-if(DCA_BUILD_DEV_TOOLS)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC -DDCA_DEV_TOOLS=1)
-else(DCA_BUILD_DEV_TOOLS)
-  target_compile_definitions(${PROJECT_NAME} PUBLIC -DDCA_DEV_TOOLS=0)
-endif(DCA_BUILD_DEV_TOOLS)
 
 target_include_directories(
   ${PROJECT_NAME}
@@ -60,6 +49,7 @@ endif(NOT TARGET Eigen3::Eigen)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
 
+option(DCA_BUILD_EXAMPLES "Build FD and example app" OFF)
 if(${DCA_BUILD_EXAMPLES})
   add_subdirectory(examples)
 endif(${DCA_BUILD_EXAMPLES})
