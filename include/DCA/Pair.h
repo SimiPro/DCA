@@ -19,8 +19,7 @@ public:
      * @param[in] primitives All primitives to generate the pairs from.
      * @return A vector of pairs of indices, where each index corresponds to a primitive in the primitives vector.
      */
-    std::vector<pair_t> generate(
-        const std::vector<primitive_t> &primitives) const;
+    std::vector<pair_t> generate(const std::vector<primitive_t> &primitives) const;
 };
 
 /**
@@ -44,8 +43,7 @@ public:
      * @param[in] primitives All primitives to generate the pairs from.
      * @return A vector of pairs of indices, where each index corresponds to a primitive in the primitives vector.
      */
-    std::vector<pair_t> generate(
-        const std::vector<primitive_t> &primitives) const;  // namespace DCA
+    std::vector<pair_t> generate(const std::vector<primitive_t> &primitives) const;  // namespace DCA
 
     /**
      * @brief This function generates pairs given two vectors of primitives, where the pairs are in a certain distance from each other and are in separate vectors.
@@ -58,9 +56,13 @@ public:
      * 
      * @attention Not all pairs are reported, only those between primitives_a and primitives_b!
      */
-    std::vector<pair_t> generate(
-        const std::vector<primitive_t> &primitives_a,
-        const std::vector<primitive_t> &primitives_b) const;
+    std::vector<pair_t> generate(const std::vector<primitive_t> &primitives_a, const std::vector<primitive_t> &primitives_b) const;
+
+private:
+    /**
+    *   @brief Helper function for generate
+    */
+    double estimate_distance(const primitive_t &p_A, const primitive_t &p_B) const;
 
 private:
     double m_radius;  ///< The radius
