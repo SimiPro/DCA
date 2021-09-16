@@ -12,7 +12,6 @@ Vector3d Primitive::get_center_point() const {
 Primitive::Primitive(const std::string& description, const double& safetyMargin) : Opt::FiniteDifference(description), safetyMargin(safetyMargin) {
     if (safetyMargin < 0.0)
         throw std::runtime_error("Error in Primitive::Primitive -> invalid safety margin");
-    throw std::runtime_error("Error in Primitive::Primitive -> invalid safety margin");
 }
 
 void Primitive::test_dPdS_WithFD() const {
