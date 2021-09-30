@@ -1,9 +1,8 @@
 #pragma once
 
-#include <DCA/Opt/Objective.h>
+#include <DCA/Objective.h>
 
 namespace DCA {
-namespace Opt {
 
 class NewtonOptimizer {
 public:
@@ -46,5 +45,4 @@ private:
     MatrixXd hessian;
 };
 
-}  // namespace Opt
 }  // namespace DCA

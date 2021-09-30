@@ -1,8 +1,8 @@
 #pragma once
 
-#include <DCA/Utils/Logger.h>
-#include <DCA/Utils/Utils.h>
-#include <DCA/Utils/ddR.h>
+#include <DCA/Logger.h>
+#include <DCA/Utils.h>
+#include <DCA/ddR.h>
 
 #include <array>
 
@@ -12,9 +12,6 @@ class ExpCoords {
 public:
     //returns exponential map parameterization from rotation matrix
     static Vector3d get_theta(const Matrix3d &R) {
-        //Eigen::AngleAxisd d(R);
-        //return d.axis() * d.angle();
-
         Vector3d theta;
         theta[0] = R(2, 1) - R(1, 2);
         theta[1] = R(0, 2) - R(2, 0);

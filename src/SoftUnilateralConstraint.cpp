@@ -1,7 +1,6 @@
-#include <DCA/Opt/SoftUnilateralConstraint.h>
+#include <DCA/SoftUnilateralConstraint.h>
 
 namespace DCA {
-namespace Opt {
 
 SoftUnilateralConstraint::SoftUnilateralConstraint(double limit, double stiffness, double epsilon) {
     this->limit = limit;
@@ -69,5 +68,4 @@ double SoftUnilateralConstraint::computeSecondDerivative(double x) const {
     return 0;
 }
 
-}  // namespace Opt
 }  // namespace DCA

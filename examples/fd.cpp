@@ -1,4 +1,4 @@
-#include <DCA/Interactions/Solver.h>
+#include <DCA/Solver.h>
 
 int main(int argc, char const *argv[]) {
     using namespace DCA;
@@ -16,17 +16,17 @@ int main(int argc, char const *argv[]) {
     Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0).test_derivatives();
     Box(Vector3d::Random(), rrand(), dim3rand(), 0.0).test_derivatives();
 
-    Interactions::Solver(Sphere(Vector3d::Random(), 0.0), Sphere(Vector3d::Random(), 0.0)).test_derivatives();
-    Interactions::Solver(Sphere(Vector3d::Random(), 0.0), Capsule(Vector3d::Random(), Vector3d::Random(), 0.0)).test_derivatives();
-    Interactions::Solver(Sphere(Vector3d::Random(), 0.0), Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0)).test_derivatives();
-    Interactions::Solver(Sphere(Vector3d::Random(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
+    Solver(Sphere(Vector3d::Random(), 0.0), Sphere(Vector3d::Random(), 0.0)).test_derivatives();
+    Solver(Sphere(Vector3d::Random(), 0.0), Capsule(Vector3d::Random(), Vector3d::Random(), 0.0)).test_derivatives();
+    Solver(Sphere(Vector3d::Random(), 0.0), Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0)).test_derivatives();
+    Solver(Sphere(Vector3d::Random(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
 
-    Interactions::Solver(Capsule(Vector3d::Random(), Vector3d::Random(), 0.0), Capsule(Vector3d::Random(), Vector3d::Random(), 0.0)).test_derivatives();
-    Interactions::Solver(Capsule(Vector3d::Random(), Vector3d::Random(), 0.0), Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0)).test_derivatives();
-    Interactions::Solver(Capsule(Vector3d::Random(), Vector3d::Random(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
+    Solver(Capsule(Vector3d::Random(), Vector3d::Random(), 0.0), Capsule(Vector3d::Random(), Vector3d::Random(), 0.0)).test_derivatives();
+    Solver(Capsule(Vector3d::Random(), Vector3d::Random(), 0.0), Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0)).test_derivatives();
+    Solver(Capsule(Vector3d::Random(), Vector3d::Random(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
 
-    Interactions::Solver(Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0), Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0)).test_derivatives();
-    Interactions::Solver(Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
+    Solver(Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0), Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0)).test_derivatives();
+    Solver(Rectangle(Vector3d::Random(), rrand(), dim2rand(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
 
-    Interactions::Solver(Box(Vector3d::Random(), rrand(), dim3rand(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
+    Solver(Box(Vector3d::Random(), rrand(), dim3rand(), 0.0), Box(Vector3d::Random(), rrand(), dim3rand(), 0.0)).test_derivatives();
 }

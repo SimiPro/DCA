@@ -1,7 +1,7 @@
 /**
- * This file should serve as an example on how to use this library.
+ * This file serves as an example on how to use this library.
  * 
- * @author: Matthias Busenhart, Simon Zimmermann, Simon Huber, Roi Poranne, Stelian Coros
+ * @author: Simon Zimmermann, Matthias Busenhart, Simon Huber, Roi Poranne, Stelian Coros
  * CRL Group, ETH Zurich, crl.ethz.ch
  * (c) 2021
  */

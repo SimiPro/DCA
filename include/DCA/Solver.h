@@ -1,12 +1,11 @@
 #pragma once
 
-#include <DCA/Interactions/DCAObjective.h>
-#include <DCA/Opt/NewtonOptimizer.h>
+#include <DCA/NewtonOptimizer.h>
+#include <DCA/Objective.h>
 
 namespace DCA {
-namespace Interactions {
 
-class Solver : public Opt::FiniteDifference {
+class Solver : public FiniteDifference {
 public:
     Solver(primitive_t primitive_A, primitive_t primitive_B);
     ~Solver() {}
@@ -32,10 +31,8 @@ public:
     void test_derivatives() const;
 
 private:
-    DCAObjective objective;
-    mutable Opt::NewtonOptimizer optimizer;
+    Objective objective;
+    mutable NewtonOptimizer optimizer;
 };
-
-}  // namespace Interactions
 
 }  // namespace DCA

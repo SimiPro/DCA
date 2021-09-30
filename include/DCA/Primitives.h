@@ -1,7 +1,7 @@
 #pragma once
 
-#include <DCA/Opt/FiniteDifference.h>
-#include <DCA/Utils/Utils.h>
+#include <DCA/FiniteDifference.h>
+#include <DCA/Utils.h>
 
 #include <array>
 #include <variant>
@@ -13,7 +13,7 @@ namespace DCA {
  * @brief Definition of a %Primitive
  */
 
-class Primitive : public Opt::FiniteDifference {
+class Primitive : public FiniteDifference {
 public:
     Primitive(const std::string& description, const double& safetyMargin);
     virtual ~Primitive() {}
@@ -48,15 +48,6 @@ protected:
 
 private:
     //Finite difference
-    typedef std::vector<MatrixXd> TensorXd;
-    typedef std::function<void(TensorXd& tensor, const VectorXd& s, const VectorXd& t)> Function_Tensor;
-
-    void estimateTensor(TensorXd& tensor, const Function_Matrix& evaluate, const VectorXd& s, const VectorXd& t, D_WRT d_wrt, int firstDim,
-                        int secondDim) const;
-    void testTensor(const Function_Matrix& evaluate, const Function_Tensor& analytic, const VectorXd& s, const VectorXd& t, D_WRT d_wrt,
-                    const std::string& name, int firstDim, int secondDim) const;
-    void printFDCheck(const TensorXd& estimate, const TensorXd& analytic, const std::string& name) const;
-
     VectorXd get_t_forFD() const;
 
 public:

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <DCA/Pair.h>
-#include <DCA/Utils/Primitives.h>
 
 namespace DCA {
 

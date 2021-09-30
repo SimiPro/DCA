@@ -1,7 +1,6 @@
 #pragma once
 
 namespace DCA {
-namespace Opt {
 
 /*
 class used to model unilateral constraints of the type x < u using a C2 penalty energy f(x).
@@ -32,5 +31,4 @@ private:
     double a1, b1, c1, a2, b2, c2, d2, epsilon, limit;
 };
 
-}  // namespace Opt
 }  // namespace DCA

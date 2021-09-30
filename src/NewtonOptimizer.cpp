@@ -1,11 +1,10 @@
-#include <DCA/Opt/NewtonOptimizer.h>
-#include <DCA/Utils/Logger.h>
+#include <DCA/Logger.h>
+#include <DCA/NewtonOptimizer.h>
 
 #include <Eigen/Dense>
 #include <Eigen/Sparse>
 
 namespace DCA {
-namespace Opt {
 
 bool NewtonOptimizer::optimize(VectorXd& t, const VectorXd& s, const Objective& objective, int maxIterations) {
     //--- Preparations
@@ -42,10 +41,10 @@ bool NewtonOptimizer::optimize(VectorXd& t, const VectorXd& s, const Objective& 
 
 void NewtonOptimizer::computeSearchDirection(const VectorXd& s, const Objective& objective) {
     //--- Compute gradient
-    objective.get_pOpT(gradient, s, t_tmp);
+    objective.compute_pOpT(gradient, s, t_tmp);
 
     //--- Compute hessian
-    objective.get_p2OpT2(hessian, s, t_tmp);
+    objective.compute_p2OpT2(hessian, s, t_tmp);
     if (checkHessianRank)
         applyMatrixInvertibilityCheck(hessian, name);
 
@@ -158,5 +157,4 @@ void NewtonOptimizer::printFinalValues(const bool& converged, const bool& better
         Logger::print(Logger::DEFAULT, "Search dir norm: %lf\n", searchDir.norm());
 }
 
-}  // namespace Opt
 }  // namespace DCA
