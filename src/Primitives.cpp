@@ -3,15 +3,16 @@
 
 namespace DCA {
 
-Vector3d Primitive::get_center_point() const {
-    Vector6d s = get_s();
-    VectorXd t = VectorXd::Zero(SIZE_T());
-    return compute_P(s, t);
-}
 
 Primitive::Primitive(const std::string& description, const double& safetyMargin) : FiniteDifference(description), safetyMargin(safetyMargin) {
     if (safetyMargin < 0.0)
         throw std::runtime_error("Error in Primitive::Primitive -> invalid safety margin");
+}
+
+Vector3d Primitive::get_center_point() const {
+    Vector6d s = get_s();
+    VectorXd t = VectorXd::Zero(SIZE_T());
+    return compute_P(s, t);
 }
 
 void Primitive::test_dPdS_WithFD() const {

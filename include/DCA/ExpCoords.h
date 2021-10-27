@@ -4,13 +4,22 @@
 #include <DCA/Utils.h>
 #include <DCA/ddR.h>
 
-#include <array>
-
 namespace DCA {
 
+/**
+ * @brief Represents Rotations using exponential coordinates.
+ * 
+ * See e.g. https://arxiv.org/pdf/1312.0788.pdf
+ */
 class ExpCoords {
 public:
-    //returns exponential map parameterization from rotation matrix
+    /**
+     * @brief Get \f$ \theta \f$ from a rotation matrix.
+     * 
+     * Returns the exponential map parameterization
+     * @param[in] R The rotation matrix
+     * @return The exponential map parameterization.
+     */
     static Vector3d get_theta(const Matrix3d &R) {
         Vector3d theta;
         theta[0] = R(2, 1) - R(1, 2);
@@ -25,6 +34,16 @@ public:
     }
 
     //returns derivative of exponential coorinates with respect to a column of R
+    /**
+     * @brief Get \f$ \frac{d\theta}{dR_i} \f$.
+     * 
+     * Returns the derivative of exponential coorinates with respect to a column of R
+     * @param[in] R The rotation matrix
+     * @param[in] index The column to use. Must be either 0, 1 or 2.
+     * @return The exponential map parameterization.
+     * 
+     * @throws std::runtime_error If the index is out of bounds.
+     */
     static Matrix3d get_dThetadRi(const Matrix3d &R, const int &index) {
         if (index < 0 || index > 2)
             throw std::runtime_error("ExpCoords::get_dThetadRi -> invalid index");
@@ -60,7 +79,11 @@ public:
         return dTdRi;
     }
 
-    //returns rotation matrix from exponential map
+    /**
+     * @brief Get a rotation matrix from given exponential map.
+     * @param[in] theta \f$ \theta \f$
+     * @return The rotation matrix which is represented by \f$ \theta \f$.
+     */
     static Matrix3d get_R(const Vector3d &theta) {
         double t = theta.norm();
         Matrix3d R;
@@ -91,7 +114,14 @@ public:
         }
     }
 
-    //returns a Jacobian that tells us how the rotation matrix changes with respect to the exponential map parameters that define it
+    /**
+     * @brief Returns the Jacobian of R.
+     * 
+     * Returns a Jacobian that tells us how the rotation matrix changes with respect to the exponential map parameters that define it.
+     * @param[in] theta \f$ \theta \f$
+     * @param[in] i The index (column).
+     * @return \f$ \frac{dR}{d\theta_i} \f$
+     */
     static Matrix3d get_dRi(const Vector3d &theta, int i) {
         Vector3d v = theta;
         Matrix3d V = getSkewSymmetricMatrix(theta);
@@ -109,6 +139,17 @@ public:
     }
 
     //returns the derivative of the Jacobian dRi wrt the exponential map parameters at index j
+    /**
+     * @brief Returns the derivative of the Jacobian of R at an index.
+     * 
+     * Returns the derivative of the Jacobian \frac{dR}{d\theta_i} \f$ with respect to the exponential map parameters at index j.
+     * @param[in] theta \f$ \theta \f$
+     * @param[in] i The first index.
+     * \param[in] j The second index.
+     * @return \f$ \frac{d^2R}{d\theta_i d\theta_j} \f$
+     * 
+     * @throws std::runtime_error (only release) if either i or j is not in [0,2].
+     */
     static Matrix3d get_ddR_i_j(const Vector3d &theta, int i, int j) {
         assert(i >= 0 && i < 3);
         assert(j >= 0 && j < 3);
@@ -146,13 +187,27 @@ public:
         return Matrix3d::Zero();
     }
 
-    //returns the world coordinates for the vector x that is expressed in local coordinates
+    /**
+     * @brief Returns world coordinates for a vector.
+     * 
+     * Returns the world coordinates for the vector x that is expressed in local coordinates.
+     * @param[in] theta The exponential map representation.
+     * @param[in] x The vector in local coordinates.
+     * @return The world coordinates for x.
+     */
     static Vector3d get_w(const Vector3d &theta, const Vector3d &x) {
         Vector3d res = get_R(theta) * x;
         return res;
     }
 
-    //returns a matrix that tells us how w changes wrt the orientation...
+    /**
+     * @brief Returns the first derivative of ExpCoords::get_w.
+     * 
+     * Returns a matrix that tells us how w changes with respect to the orientation.
+     * @param[in] theta The exponential map representation.
+     * @param[in] x The vector in local coordinates.
+     * @return The derivative of w with respect to the orientation.
+     */
     static Matrix3d get_dwdr(const Vector3d &theta, const Vector3d &x) {
         Matrix3d dw_dr;
         for (int i = 0; i < 3; ++i)
@@ -160,7 +215,22 @@ public:
         return dw_dr;
     }
 
+    /**
+     * @group d^2w/dr dr_i
+     * @brief The second derivatives of ExpCoords::get_w.
+     */
+
+    /** @{ */  // start of group
     //returns a matrix that tells us how the Jacobian dwdr changes wrt the first component of the orientation...
+
+    /**
+     * @brief Returns \f$ \frac{d^2 w}{dR dR_1} \f$
+     * 
+     * Returns the second derivative of ExpCoords::get_w with respect to the first component of the orientation.
+     * @param[in] theta The exponential map representation.
+     * @param[in] x The local coordinates of the point.
+     * @return The second derivative.
+     */
     static Matrix3d get_ddwdr_dr1(const Vector3d &theta, const Vector3d &x) {
         Matrix3d ddwdr_dr1;
         for (int i = 0; i < 3; ++i)
@@ -168,7 +238,14 @@ public:
         return ddwdr_dr1;
     }
 
-    //returns a matrix that tells us how the Jacobian dwdr changes wrt the second component of the orientation...
+    /**
+     * @brief Returns \f$ \frac{d^2 w}{dR dR_2} \f$
+     * 
+     * Returns the second derivative of ExpCoords::get_w with respect to the second component of the orientation.
+     * @param[in] theta The exponential map representation.
+     * @param[in] x The local coordinates of the point.
+     * @return The second derivative.
+     */
     static Matrix3d get_ddwdr_dr2(const Vector3d &theta, const Vector3d &x) {
         Matrix3d ddwdr_dr2;
         for (int i = 0; i < 3; ++i)
@@ -176,37 +253,60 @@ public:
         return ddwdr_dr2;
     }
 
-    //returns a matrix that tells us how the Jacobian dwdr changes wrt the third component of the orientation...
+    /**
+     * @brief Returns \f$ \frac{d^2 w}{dR dR_3} \f$
+     * 
+     * Returns the second derivative of ExpCoords::get_w with respect to the third component of the orientation.
+     * @param[in] theta The exponential map representation.
+     * @param[in] x The local coordinates of the point.
+     * @return The second derivative.
+     */
     static Matrix3d get_ddwdr_dr3(const Vector3d &theta, const Vector3d &x) {
         Matrix3d ddwdr_dr3;
         for (int i = 0; i < 3; ++i)
             ddwdr_dr3.col(i) = get_ddR_i_j(theta, i, 2) * x;
         return ddwdr_dr3;
     }
+    /** @} */  // end of group.
 
 private:
-    // tolerance for avoiding singularity of Rodrigues' formula
-    constexpr static const double tol = 1e-8;
-    constexpr static const double PI = 3.14159265359;
+    constexpr static const double tol = 1e-8;           ///< Tolerance for avoiding singularities of Rodrigues' formula.
+    constexpr static const double _PI = 3.14159265359;  ///< Helper.
 
-    //make skew symmetric for v
+    /**
+     * @brief Get the skew symmetric matrix for a given vector.
+     * 
+     * @param[in] v The vector.
+     * @return The skew symmetric matrix.
+     */
     static Matrix3d getSkewSymmetricMatrix(const Vector3d &v) {
         Matrix3d result;
         result << 0, -v.z(), v.y(), v.z(), 0, -v.x(), -v.y(), v.x(), 0;
         return result;
     }
 
+    /**
+     * @brief Safe arcus cosinus.
+     * @param[in] x The value.
+     * @return safe arcus cosinus.
+     */
     static double safeACOS(double x) {
         if (x < -1)
-            return PI;
+            return _PI;
         if (x > 1)
             return 0;
         return acos(x);
     }
 
+    /**
+     * @brief Safe derivative of arcus cosinus.
+     * @param[in] x The value.
+     * @return Safe derivative of the arcus cosinus.
+     * @todo Is this right? Wikipedia has an additional minus.
+     */
     static double safeDACOS(double x) {
         if (x < -1 || x > 1)
-            return 2 * PI;
+            return 2 * _PI;
         return 1.0 / sqrt(1.0 - x * x);
     }
 };
