@@ -16,6 +16,8 @@ namespace DCA {
  * and a n-dimensional parameterization vector.
  * 
  * This means, any convex primitive which can be described in a continuously differentiable manner can be implemented.
+ * 
+ * The inheritance on FiniteDifference is just to make the automatic derivative checking easier.
  */
 class Primitive : public FiniteDifference {
 public:
@@ -118,7 +120,7 @@ public:
     void test_d2PdS2_WithFD() const;
     void test_d2PdSdT_WithFD() const;
     void test_derivatives() const;
-#endif
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 protected:
     /**
@@ -131,7 +133,8 @@ protected:
 private:
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
     VectorXd get_t_forFD() const;
-#endif
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
+
 public:
     double safetyMargin;  ///< Internal storage of the safety margin.
 };

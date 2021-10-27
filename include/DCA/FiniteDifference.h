@@ -6,10 +6,16 @@
 
 namespace DCA {
 
+/**
+ * @brief Helper for finite differences (to test derivatives).
+ * 
+ * @attention Not documented.
+ */
 class FiniteDifference {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
 public:
     FiniteDifference(std::string description) : description(description) {}
-    virtual ~FiniteDifference() {}
+    virtual ~FiniteDifference() = default;
 
 protected:
     //Derivative with respect to ...
@@ -46,6 +52,8 @@ protected:
 
 public:
     std::string description;
+
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 };
 
 }  // namespace DCA

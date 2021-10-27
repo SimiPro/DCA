@@ -9,6 +9,8 @@
 
 namespace DCA {
 
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+
 #define ANSI_COLOR_RED "\x1b[31m"
 #define ANSI_COLOR_GREEN "\x1b[32m"
 #define ANSI_COLOR_YELLOW "\x1b[33m"
@@ -41,11 +43,25 @@ namespace DCA {
         delete[] pBuffer;                          \
         pBuffer = nullptr;                         \
     }
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
+/**
+ * @brief %Logger class.
+ * 
+ * Writes to stout.
+ */
 class Logger {
 public:
+    /**
+     * @brief Possible color values.
+     */
     enum PRINT_COLOR { RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, DEFAULT };
 
+    /**
+     * @brief Print a message.
+     * @param[in] color The color to use.
+     * @param[in] fmt The thing to print, potentially containing format strings.
+     */
     static void print(PRINT_COLOR color, const char* fmt, ...) {
         char* pBuffer = nullptr;
         GET_STRING_FROM_ARGUMENT_LIST(fmt, pBuffer);
