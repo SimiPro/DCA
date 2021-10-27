@@ -22,12 +22,14 @@ using Eigen::MatrixXd;                            ///< Easier access to any dyna
 
 using pair_t = std::pair<size_t, size_t>;  ///< Easier access to a pair (corresponding of two indices)
 
-// Helper for std::visit
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+// Helper for std::visit, see https://en.cppreference.com/w/cpp/utility/variant/visit
 template <class... Ts>
 struct overloaded : Ts... {
     using Ts::operator()...;
 };
 template <class... Ts>
 overloaded(Ts...) -> overloaded<Ts...>;
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
 }  // namespace DCA

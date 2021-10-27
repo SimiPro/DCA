@@ -1,5 +1,10 @@
 #include <DCA/Solver.h>
 
+/**
+ * 
+ * This executable checks all partial and absolute derivatives of all pairs.
+ * 
+ */
 int main(int argc, char const *argv[]) {
     using namespace DCA;
 

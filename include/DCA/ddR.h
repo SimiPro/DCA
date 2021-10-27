@@ -4,10 +4,24 @@
 
 namespace DCA {
 
-//second derivatives of R(theta), where theta represents the exponential map parameter vector of the rotation
-//dRi is the derivative of the rotation matrix wrt the ith exponential map parameter
-//ddRij is the derivative of dRi wrt the jth exponential map parameter
+/**
+ * @name ddR
+ * @brief Second derivatives of \f$ R(\theta) \f$
+ * 
+ * \f$ \theta \f$ represents the exponential map parameter vector of the rotation.
+ * 
+ * \f$ \frac{dR}{d\theta_i} \f$ is the derivative of the rotation matrix with respect to the i-th exponential map parameter
+ * \f$ \frac{d^2R}{d\theta_i d\theta_j} \f$ is the derivative \frac{dR}{d\theta_i} with respect to the j-th exponential map parameter
+ */
 
+/** @{ */ // start of group
+
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_0 d\theta_0} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_0_0(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_0_0;
     double v0 = v[0];
@@ -330,6 +344,12 @@ inline Eigen::Matrix3d ddR_0_0(const Eigen::Vector3d& v) {
     return ddR_0_0;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_0 d\theta_1} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_0_1(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_0_1;
     double v0 = v[0];
@@ -650,6 +670,12 @@ inline Eigen::Matrix3d ddR_0_1(const Eigen::Vector3d& v) {
     return ddR_0_1;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_0 d\theta_2} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_0_2(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_0_2;
     double v0 = v[0];
@@ -970,6 +996,12 @@ inline Eigen::Matrix3d ddR_0_2(const Eigen::Vector3d& v) {
     return ddR_0_2;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_1 d\theta_0} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_1_0(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_1_0;
     double v0 = v[0];
@@ -1290,6 +1322,12 @@ inline Eigen::Matrix3d ddR_1_0(const Eigen::Vector3d& v) {
     return ddR_1_0;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_1 d\theta_1} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_1_1(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_1_1;
     double v0 = v[0];
@@ -1612,6 +1650,12 @@ inline Eigen::Matrix3d ddR_1_1(const Eigen::Vector3d& v) {
     return ddR_1_1;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_1 d\theta_2} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_1_2(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_1_2;
     double v0 = v[0];
@@ -1932,6 +1976,12 @@ inline Eigen::Matrix3d ddR_1_2(const Eigen::Vector3d& v) {
     return ddR_1_2;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_2 d\theta_0} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_2_0(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_2_0;
     double v0 = v[0];
@@ -2252,6 +2302,12 @@ inline Eigen::Matrix3d ddR_2_0(const Eigen::Vector3d& v) {
     return ddR_2_0;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_2 d\theta_1} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_2_1(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_2_1;
     double v0 = v[0];
@@ -2572,6 +2628,12 @@ inline Eigen::Matrix3d ddR_2_1(const Eigen::Vector3d& v) {
     return ddR_2_1;
 }
 
+/**
+ * @brief Compute \f$ \frac{d^2R}{d\theta_2 d\theta_2} \f$
+ * 
+ * @param[in] v \f$ \theta \f$
+ * @return The partial second derivative.
+ */
 inline Eigen::Matrix3d ddR_2_2(const Eigen::Vector3d& v) {
     Eigen::Matrix3d ddR_2_2;
     double v0 = v[0];
@@ -2893,5 +2955,7 @@ inline Eigen::Matrix3d ddR_2_2(const Eigen::Vector3d& v) {
 
     return ddR_2_2;
 }
+
+/** @} */ // end of group
 
 }  // namespace DCA
