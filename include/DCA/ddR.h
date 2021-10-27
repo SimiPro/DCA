@@ -11,7 +11,7 @@ namespace DCA {
  * \f$ \theta \f$ represents the exponential map parameter vector of the rotation.
  * 
  * \f$ \frac{dR}{d\theta_i} \f$ is the derivative of the rotation matrix with respect to the i-th exponential map parameter
- * \f$ \frac{d^2R}{d\theta_i d\theta_j} \f$ is the derivative \frac{dR}{d\theta_i} with respect to the j-th exponential map parameter
+ * \f$ \frac{d^2R}{d\theta_i d\theta_j} \f$ is the derivative of \f$ \frac{dR}{d\theta_i} \f$ with respect to the j-th exponential map parameter
  */
 
 /** @{ */ // start of group
