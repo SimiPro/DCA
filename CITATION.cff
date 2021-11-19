@@ -26,6 +26,6 @@ keywords:
   - "Constrained Motion Planning"
   - "Collision Avoidance"
 message: "If you use this software, please cite it using these metadata."
-repository-code: "https://github.com/SimiPro/DCA"
+repository-code: "https://github.com/SimiPro/DCA.git"
 title: "Differentiable Collision Avoidance Using Collision Primitives"
 ...

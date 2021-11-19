@@ -25,7 +25,7 @@ public:
      * 
      * Computes the first derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param dDdD[out] The first derivative \f$ \frac{dD}{dS} \f$
+     * @param dDdS[out] The first derivative \f$ \frac{dD}{dS} \f$
      * @param p_a[in] The first primitive
      * @param p_b[in] The second primitive
      */
@@ -36,7 +36,7 @@ public:
      * 
      * Computes the second derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param dDdD[out] The second derivative \f$ \frac{d^2D}{dS^2} \f$
+     * @param d2DdS2[out] The second derivative \f$ \frac{d^2D}{dS^2} \f$
      * @param p_a[in] The first primitive
      * @param p_b[in] The second primitive
      */
@@ -69,7 +69,7 @@ public:
      * 
      * Computes the first derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param dDdD[out] The first derivative \f$ \frac{dD}{dS} \f$
+     * @param dDdS[out] The first derivative \f$ \frac{dD}{dS} \f$
      * @param p_a[in] The first primitive
      * @param p_b[in] The second primitive
      * @param[in] t The \f$ t \f$ values for the parameterization.
@@ -81,7 +81,7 @@ public:
      * 
      * Computes the second derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param dDdD[out] The second derivative \f$ \frac{d^2D}{dS^2} \f$
+     * @param d2DdS2[out] The second derivative \f$ \frac{d^2D}{dS^2} \f$
      * @param p_a[in] The first primitive
      * @param p_b[in] The second primitive
      * @param[in] t The \f$ t \f$ values for the parameterization.
