@@ -28,9 +28,9 @@ public:
 
     /**
      * @brief Set a new limit.
-     * @param[in] l The new limit.
+     * @param[in] limit The new limit.
      */
-    void setLimit(double lim);
+    void setLimit(double limit);
 
     /**
      * @brief Set a new epsilon.
@@ -39,9 +39,8 @@ public:
     void setEpsilon(double eps);
 
     /**
-     * @brief Compute the force acting on x.
-     * @param[in] x The current position
-     * @return The force F acting on x.
+     * @brief Set a new stiffness.
+     * @param[in] s The new stiffness.
      */
     void setStiffness(double s);
 

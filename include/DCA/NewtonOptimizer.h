@@ -25,8 +25,8 @@ public:
 
     /**
      * @brief Perform the optimization.
-     * @param[out] The resulting t values.
-     * @param[in] The state of two primitives.
+     * @param[out] t The resulting t values.
+     * @param[in] s The state of two primitives.
      * @param[in] objective The objective to optimize.
      * @param[in] maxIterations The maximum number of iterations.
      * @return True, if the solver has converged.

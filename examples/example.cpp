@@ -3,7 +3,7 @@
  * 
  * @author: Simon Zimmermann, Matthias Busenhart, Simon Huber, Roi Poranne, Stelian Coros
  * CRL Group, ETH Zurich, crl.ethz.ch
- * (c) 2021
+ * (c) 2022
  */
 
 #include <iostream>  // for std::cout and std::endl

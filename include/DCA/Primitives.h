@@ -24,7 +24,7 @@ public:
     /**
      * @brief Create a primitive.
      * 
-     * @param[in] The description of the primitive.
+     * @param[in] description The description of the primitive.
      * @param[in] safetyMargin The safety margin of the primitive.
      * @throws std::runtime_error if safety margin < 0
      */
