@@ -22,4 +22,4 @@ We refer the reader to the [example](examples/example.cpp).
 The API can be found inside the [API header](include/DCA/API.h). Generally speaking, one passes two primitives and gets back either the distance or the first or second derivative. If the states of the two primitives do not change, one can also pass the computed parameterization (`t`) using the specialized functions. The parameterization can also be computed with a single API call and the two given primitives.
 
 ## Documentation
-The documentation can be downloaded [here](https://gitlab.inf.ethz.ch/crl/utils/crl-dca/-/jobs/artifacts/main/raw/docs/build/doc_doxygen/latex/refman.pdf?job=documentation).
+The documentation can be downloaded [here](docs/Doc.pdf).
