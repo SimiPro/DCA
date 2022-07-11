@@ -25,9 +25,9 @@ public:
      * 
      * Computes the first derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param dDdS[out] The first derivative \f$ \frac{dD}{dS} \f$
-     * @param p_a[in] The first primitive
-     * @param p_b[in] The second primitive
+     * @param[out] dDdS The first derivative \f$ \frac{dD}{dS} \f$
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
      */
     static void compute_dDdS(Vector12d& dDdS, const primitive_t& p_a, const primitive_t& p_b);
 
@@ -36,9 +36,9 @@ public:
      * 
      * Computes the second derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param d2DdS2[out] The second derivative \f$ \frac{d^2D}{dS^2} \f$
-     * @param p_a[in] The first primitive
-     * @param p_b[in] The second primitive
+     * @param[out] d2DdS2 The second derivative \f$ \frac{d^2D}{dS^2} \f$
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
      */
     static void compute_d2DdS2(Matrix12d& d2DdS2, const primitive_t& p_a, const primitive_t& p_b);
 
@@ -69,9 +69,9 @@ public:
      * 
      * Computes the first derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param dDdS[out] The first derivative \f$ \frac{dD}{dS} \f$
-     * @param p_a[in] The first primitive
-     * @param p_b[in] The second primitive
+     * @param[out] dDdS The first derivative \f$ \frac{dD}{dS} \f$
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
      * @param[in] t The \f$ t \f$ values for the parameterization.
      */
     static void compute_dDdS(Vector12d& dDdS, const primitive_t& p_a, const primitive_t& p_b, const VectorXd& t);
@@ -81,9 +81,9 @@ public:
      * 
      * Computes the second derivative of the shortest distance between two primitives with respect to the state of the primitives.
      * 
-     * @param d2DdS2[out] The second derivative \f$ \frac{d^2D}{dS^2} \f$
-     * @param p_a[in] The first primitive
-     * @param p_b[in] The second primitive
+     * @param[out] d2DdS2 The second derivative \f$ \frac{d^2D}{dS^2} \f$
+     * @param[in] p_a The first primitive
+     * @param[in] p_b The second primitive
      * @param[in] t The \f$ t \f$ values for the parameterization.
      */
     static void compute_d2DdS2(Matrix12d& d2DdS2, const primitive_t& p_a, const primitive_t& p_b, const VectorXd& t);

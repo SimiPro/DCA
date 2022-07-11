@@ -33,7 +33,6 @@ public:
         return theta;
     }
 
-    //returns derivative of exponential coorinates with respect to a column of R
     /**
      * @brief Get \f$ \frac{d\theta}{dR_i} \f$.
      * 
@@ -64,17 +63,17 @@ public:
 
         Matrix3d dTdRi;
         if (index == 0) {
-            dTdRi.col(0) = -0.5 * dacos * theta / theta_norm;
+            dTdRi.col(0) = 0.5 * dacos * theta / theta_norm;
             dTdRi.col(1) = -acos * (theta * theta[2] / theta_norm_3 - Vector3d::UnitZ() / theta_norm);
             dTdRi.col(2) = acos * (theta * theta[1] / theta_norm_3 - Vector3d::UnitY() / theta_norm);
         } else if (index == 1) {
             dTdRi.col(0) = acos * (theta * theta[2] / theta_norm_3 - Vector3d::UnitZ() / theta_norm);
-            dTdRi.col(1) = -0.5 * dacos * theta / theta_norm;
+            dTdRi.col(1) = 0.5 * dacos * theta / theta_norm;
             dTdRi.col(2) = -acos * (theta * theta[0] / theta_norm_3 - Vector3d::UnitX() / theta_norm);
         } else if (index == 2) {
             dTdRi.col(0) = -acos * (theta * theta[1] / theta_norm_3 - Vector3d::UnitY() / theta_norm);
             dTdRi.col(1) = acos * (theta * theta[0] / theta_norm_3 - Vector3d::UnitX() / theta_norm);
-            dTdRi.col(2) = -0.5 * dacos * theta / theta_norm;
+            dTdRi.col(2) = 0.5 * dacos * theta / theta_norm;
         }
         return dTdRi;
     }
@@ -138,14 +137,13 @@ public:
         return dR_i;
     }
 
-    //returns the derivative of the Jacobian dRi wrt the exponential map parameters at index j
     /**
      * @brief Returns the derivative of the Jacobian of R at an index.
      * 
-     * Returns the derivative of the Jacobian \frac{dR}{d\theta_i} \f$ with respect to the exponential map parameters at index j.
+     * Returns the derivative of the Jacobian \f$ \frac{dR}{d\theta_i} \f$ with respect to the exponential map parameters at index j.
      * @param[in] theta \f$ \theta \f$
      * @param[in] i The first index.
-     * \param[in] j The second index.
+     * @param[in] j The second index.
      * @return \f$ \frac{d^2R}{d\theta_i d\theta_j} \f$
      * 
      * @throws std::runtime_error (only release) if either i or j is not in [0,2].
@@ -216,14 +214,6 @@ public:
     }
 
     /**
-     * @group d^2w/dr dr_i
-     * @brief The second derivatives of ExpCoords::get_w.
-     */
-
-    /** @{ */  // start of group
-    //returns a matrix that tells us how the Jacobian dwdr changes wrt the first component of the orientation...
-
-    /**
      * @brief Returns \f$ \frac{d^2 w}{dR dR_1} \f$
      * 
      * Returns the second derivative of ExpCoords::get_w with respect to the first component of the orientation.
@@ -267,7 +257,6 @@ public:
             ddwdr_dr3.col(i) = get_ddR_i_j(theta, i, 2) * x;
         return ddwdr_dr3;
     }
-    /** @} */  // end of group.
 
 private:
     constexpr static const double tol = 1e-8;           ///< Tolerance for avoiding singularities of Rodrigues' formula.
@@ -302,12 +291,11 @@ private:
      * @brief Safe derivative of arcus cosinus.
      * @param[in] x The value.
      * @return Safe derivative of the arcus cosinus.
-     * @todo Is this right? Wikipedia has an additional minus.
      */
     static double safeDACOS(double x) {
         if (x < -1 || x > 1)
             return 2 * _PI;
-        return 1.0 / sqrt(1.0 - x * x);
+        return -1.0 / sqrt(1.0 - x * x);
     }
 };
 }  // namespace DCA

@@ -1,5 +1,3 @@
-![Build](https://github.com/SimiPro/DCA/actions/workflows/build.yml/badge.svg?branch=master)
-
 # DCA - Differentiable Collision Avoidance
 
 We implement differentiable collision avoidance using multiple shape primitives.
@@ -18,7 +16,10 @@ Furthermore, the size of the parameters is:
 - 3 for a box
 
 ## Example
-We refer the reader to the [example](example/example.cpp).
+We refer the reader to the [example](examples/example.cpp).
 
 ## API
 The API can be found inside the [API header](include/DCA/API.h). Generally speaking, one passes two primitives and gets back either the distance or the first or second derivative. If the states of the two primitives do not change, one can also pass the computed parameterization (`t`) using the specialized functions. The parameterization can also be computed with a single API call and the two given primitives.
+
+## Documentation
+The documentation can be downloaded [here](https://gitlab.inf.ethz.ch/crl/utils/crl-dca/-/jobs/artifacts/main/raw/docs/build/doc_doxygen/latex/refman.pdf?job=documentation).

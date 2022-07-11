@@ -12,7 +12,7 @@ macro(fetch what)
     mark_as_advanced(${${what}_SOURCE_DIR})
 endmacro()
 
-project("DCA" VERSION 0.1
+project("DCA" VERSION 1.0
              DESCRIPTION "Differentiable Collision Avoidance"
              HOMEPAGE_URL "https://github.com/SimiPro/DCA")
 
@@ -46,10 +46,10 @@ if(NOT TARGET Eigen3::Eigen)
   target_include_directories(eigen INTERFACE ${eigen_SOURCE_DIR})
 endif(NOT TARGET Eigen3::Eigen)
 
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_20)
 target_link_libraries(${PROJECT_NAME} PUBLIC Eigen3::Eigen)
 
-option(DCA_BUILD_EXAMPLES "Build FD and example app" OFF)
+option(DCA_BUILD_EXAMPLES "Build example app" OFF)
 if(${DCA_BUILD_EXAMPLES})
   add_subdirectory(examples)
 endif(${DCA_BUILD_EXAMPLES})

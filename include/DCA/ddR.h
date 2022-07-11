@@ -5,7 +5,7 @@
 namespace DCA {
 
 /**
- * @name ddR
+ * @defgroup ddR Partial Derivatives of Rotation Matrices
  * @brief Second derivatives of \f$ R(\theta) \f$
  * 
  * \f$ \theta \f$ represents the exponential map parameter vector of the rotation.
